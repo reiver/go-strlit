@@ -10,16 +10,16 @@ This supports a number of different beginning and ending characters for string l
 * «...»
 
 This also supports the following string literal escape sequences:
-* \0
-* \a
-* \b
-* \e
-* \f
-* \n
-* \r
-* \t
-* \v
-* \\
+* \0 (null)
+* \a (bell)
+* \b (backspace)
+* \e (escape)
+* \f (form feed)
+* \n (line feed)
+* \r (carriage return )
+* \t (horizontal tab )
+* \v (vertical tab)
+* \\\\ (backslash)
 * \'
 * \"
 * \?
@@ -29,7 +29,6 @@ This also supports the following string literal escape sequences:
 * \”
 * \«
 * \»
-
 * \xhh
 * \uhhhh
 * \Uhhhhhhhh
