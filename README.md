@@ -1,6 +1,6 @@
 # go-strlit
 
-A library that provides tools to "compile" a string literal into the value they represent, for the Go programming language.
+A library that provides tools to "compile" a string literals into the value they represent, for the Go programming language.
 
 This supports a number of different beginning and ending characters for string literals. Namely:
 * '...'
