@@ -9,6 +9,31 @@ This supports a number of different beginning and ending characters for string l
 * “...”
 * «...»
 
+This also supports the following string literal escape sequences:
+* \0
+* \a
+* \b
+* \e
+* \f
+* \n
+* \r
+* \t
+* \v
+* \\
+* \'
+* \"
+* \?
+* \‘
+* \’
+* \“
+* \”
+* \«
+* \»
+
+* \xhh
+* \uhhhh
+* \Uhhhhhhhh
+
 
 ## Documention
 
