@@ -7,6 +7,7 @@ This supports a number of different beginning and ending characters for string l
 * "..."
 * ‘...’
 * “...”
+* ‹...›
 * «...»
 
 This also supports the following string literal escape sequences:
@@ -27,6 +28,8 @@ This also supports the following string literal escape sequences:
 * \’
 * \“
 * \”
+* \‹
+* \›
 * \«
 * \»
 * \xhh
@@ -47,6 +50,7 @@ Online documentation, which includes examples, can be found at: http://godoc.org
 //stringLiteral := `'This is a string literal.\tStill going.'`
 //stringLiteral := `‘This is a string literal.\tStill going.’`
 //stringLiteral := `“This is a string literal.\tStill going.”`
+//stringLiteral := `‹This is a string literal.\tStill going.›`
 //stringLiteral := `«This is a string literal.\tStill going.»`
 
 compiled, err := strlit.Compile( strings.NewReader(stringLiteral) )

@@ -41,6 +41,8 @@ func Compile(runeScanner io.RuneScanner) (Compiled, error) {
 		endRune = '’'
 	case '“':
 		endRune = '”'
+	case '‹':
+		endRune = '›'
 	case '«':
 		endRune = '»'
 	default:
@@ -457,6 +459,10 @@ func Compile(runeScanner io.RuneScanner) (Compiled, error) {
 				r = '“'
 			case '”':
 				r = '”'
+			case '‹':
+				r = '‹'
+			case '›':
+				r = '›'
 			case '«':
 				r = '«'
 			case '»':
