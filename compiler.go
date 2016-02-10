@@ -7,7 +7,19 @@ import (
 )
 
 
-func Compile(runeScanner io.RuneScanner) (parcelWithResultOfCompilingStringLiteral Parcel, parcelWithPrecompiledStringLiteral Parcel, err error) {
+// Compile will "compile" a string literal, which it pulls from the io.RunScanner, into
+// the value the string literal represents.
+//
+// It returns both the value of the string literal and the original string literal code.
+//
+// If there is a syntax error in the string literal, it will return an error of type
+// strlit.SyntaxErrorComplainer.
+//
+// If your string literal is in a Go string, and you want to pass it to strlit.Compile(),
+// then wrap it in a strings.NewReader(). For example:
+//
+//	compiled, code, err := strlit.Compile( strings.NewReader("‘apple banana cherry’") )
+func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLiteralCode Parcel, err error) {
 
 	code := newParcel()
 
