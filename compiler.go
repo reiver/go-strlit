@@ -7,13 +7,12 @@ import (
 )
 
 
-func Compile(runeScanner io.RuneScanner) (Compiled, Code, error) {
+func Compile(runeScanner io.RuneScanner) (parcelWithResultOfCompilingStringLiteral Parcel, parcelWithPrecompiledStringLiteral Parcel, err error) {
 
-	code := newCode()
+	code := newParcel()
 
 
 	var r rune
-	var err error
 
 
 	// Make sure there is at least one rune.
@@ -56,7 +55,7 @@ func Compile(runeScanner io.RuneScanner) (Compiled, Code, error) {
 	runeScanner.UnreadRune()
 
 
-	compiled := newCompiled()
+	compiled := newParcel()
 	for {
 		r, _, err = runeScanner.ReadRune()
 		if io.EOF == err {
