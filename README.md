@@ -32,9 +32,9 @@ This also supports the following string literal escape sequences:
 * \›
 * \«
 * \»
-* \xhh
-* \uhhhh
-* \Uhhhhhhhh
+* \xhh       (ex:       \x5a)
+* \uhhhh     (ex:     \u005a)
+* \Uhhhhhhhh (ex: \U0000005a)
 
 
 ## Documention
