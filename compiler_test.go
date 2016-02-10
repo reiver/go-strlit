@@ -2,6 +2,8 @@ package strlit
 
 
 import (
+	"fmt"
+	"strconv"
 	"strings"
 
 	"testing"
@@ -9,6 +11,569 @@ import (
 
 
 func TestCompile(t *testing.T) {
+
+	testClass := "0-9 '...'"
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `'%s'`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "0-9 \"...\""
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `"%s"`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "0-9 ‘...’"
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `‘%s’`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "0-9 “...”"
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `“%s”`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "0-9 ‹...›"
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `‹%s›`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "0-9 «...»"
+	for r := '0'; r <= '9'; r++ {
+
+		codeTmpl     := `«%s»`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - '0')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+
+
+	testClass = "a-z '...'"
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `'%s'`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "a-z \"...\""
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `"%s"`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "a-z ‘...’"
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `‘%s’`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "a-z “...”"
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `“%s”`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "a-z ‹...›"
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `‹%s›`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "a-z «...»"
+	for r := 'a'; r <= 'z'; r++ {
+
+		codeTmpl     := `«%s»`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'a')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+
+
+	testClass = "A-Z '...'"
+	for r := 'a'; r <= 'Z'; r++ {
+
+		codeTmpl     := `'%s'`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "A-Z \"...\""
+	for r := 'A'; r <= 'Z'; r++ {
+
+		codeTmpl     := `"%s"`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "A-Z ‘...’"
+	for r := 'A'; r <= 'Z'; r++ {
+
+		codeTmpl     := `‘%s’`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "A-Z “...”"
+	for r := 'A'; r <= 'Z'; r++ {
+
+		codeTmpl     := `“%s”`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "A-Z ‹...›"
+	for r := 'A'; r <= 'Z'; r++ {
+
+		codeTmpl     := `‹%s›`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+	testClass = "A-Z «...»"
+	for r := 'A'; r <= 'Z'; r++ {
+
+		codeTmpl     := `«%s»`
+                expectedTmpl :=  `%s`
+
+		code     := fmt.Sprintf(codeTmpl,     string(r))
+		expected := fmt.Sprintf(expectedTmpl, string(r))
+
+		testNumber := int(r - 'A')
+		doTestOnCompile(t, testClass, testNumber, code, expected)
+
+	}
+
+
+
+	hexadecimalRunes := []rune{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f'}
+
+	testClass = "\\xhh '...'"
+	testNumber := 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `'%s'`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+	testClass = "\\xhh \"...\""
+	testNumber = 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `"%s"`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+	testClass = "\\xhh ‘...’"
+	testNumber = 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `‘%s’`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+	testClass = "\\xhh “...”"
+	testNumber = 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `“%s”`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+	testClass = "\\xhh ‹...›"
+	testNumber = 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `‹%s›`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+	testClass = "\\xhh «...»"
+	testNumber = 0
+	for _, r1 := range hexadecimalRunes {
+		for _, r0 := range hexadecimalRunes {
+			hh := fmt.Sprintf("%s%s", string(r1), string(r0))
+			s := fmt.Sprintf("\\x%s%s", string(r1), string(r0))
+
+			n, err := strconv.ParseInt(hh, 16, 16)
+			if nil != err {
+				t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+				continue
+			}
+
+			codeTmpl     := `«%s»`
+			code     := fmt.Sprintf(codeTmpl, s)
+
+			expected := string(rune(n))
+
+			doTestOnCompile(t, testClass, testNumber, code, expected)
+			testNumber++
+		}
+	}
+
+
+
+	testClass = "\\uhhhh '...'"
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `'%s'`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
+	testClass = "\\uhhhh \"...\""
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `"%s"`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
+	testClass = "\\uhhhh ‘...’"
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `‘%s’`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
+	testClass = "\\uhhhh “...”"
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `“%s”`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
+	testClass = "\\uhhhh ‹...›"
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `‹%s›`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
+	testClass = "\\uhhhh «...»"
+	testNumber = 0
+	for _, r3 := range hexadecimalRunes {
+		for _, r2 := range hexadecimalRunes {
+			for _, r1 := range hexadecimalRunes {
+				for _, r0 := range hexadecimalRunes {
+					hhhh := fmt.Sprintf("%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+					s := fmt.Sprintf("\\u%s%s%s%s", string(r3), string(r2), string(r1), string(r0))
+
+					n, err := strconv.ParseInt(hhhh, 16, 32)
+					if nil != err {
+						t.Errorf("THIS SHOULD NOT HAPPEN! %v", err)
+						continue
+					}
+
+					codeTmpl := `«%s»`
+					code     := fmt.Sprintf(codeTmpl, s)
+
+					expected := string(rune(n))
+
+					doTestOnCompile(t, testClass, testNumber, code, expected)
+					testNumber++
+				}
+			}
+		}
+	}
+
 
 	tests := []struct{
 		Code     string
@@ -28,6 +593,10 @@ func TestCompile(t *testing.T) {
 		},
 		{
 			Code:     `“”`,
+			Expected:  ``,
+		},
+		{
+			Code:     `‹›`,
 			Expected:  ``,
 		},
 		{
@@ -54,468 +623,12 @@ func TestCompile(t *testing.T) {
 			Expected:  ` `,
 		},
 		{
-			Code:     `« »`,
+			Code:     `‹ ›`,
 			Expected:  ` `,
 		},
-
-
-
 		{
-			Code:     `'a'`,
-			Expected:  `a`,
-		},
-		{
-			Code:     `"a"`,
-			Expected:  `a`,
-		},
-		{
-			Code:     `‘a’`,
-			Expected:  `a`,
-		},
-		{
-			Code:     `“a”`,
-			Expected:  `a`,
-		},
-		{
-			Code:     `«a»`,
-			Expected:  `a`,
-		},
-
-
-
-		{
-			Code:     `'A'`,
-			Expected:  `A`,
-		},
-		{
-			Code:     `"A"`,
-			Expected:  `A`,
-		},
-		{
-			Code:     `‘A’`,
-			Expected:  `A`,
-		},
-		{
-			Code:     `“A”`,
-			Expected:  `A`,
-		},
-		{
-			Code:     `«A»`,
-			Expected:  `A`,
-		},
-
-
-
-		{
-			Code:     `'b'`,
-			Expected:  `b`,
-		},
-		{
-			Code:     `"b"`,
-			Expected:  `b`,
-		},
-		{
-			Code:     `‘b’`,
-			Expected:  `b`,
-		},
-		{
-			Code:     `“b”`,
-			Expected:  `b`,
-		},
-		{
-			Code:     `«b»`,
-			Expected:  `b`,
-		},
-
-
-
-		{
-			Code:     `'B'`,
-			Expected:  `B`,
-		},
-		{
-			Code:     `"B"`,
-			Expected:  `B`,
-		},
-		{
-			Code:     `‘B’`,
-			Expected:  `B`,
-		},
-		{
-			Code:     `“B”`,
-			Expected:  `B`,
-		},
-		{
-			Code:     `«B»`,
-			Expected:  `B`,
-		},
-
-
-
-		{
-			Code:     `'c'`,
-			Expected:  `c`,
-		},
-		{
-			Code:     `"c"`,
-			Expected:  `c`,
-		},
-		{
-			Code:     `‘c’`,
-			Expected:  `c`,
-		},
-		{
-			Code:     `“c”`,
-			Expected:  `c`,
-		},
-		{
-			Code:     `«c»`,
-			Expected:  `c`,
-		},
-
-
-
-		{
-			Code:     `'C'`,
-			Expected:  `C`,
-		},
-		{
-			Code:     `"C"`,
-			Expected:  `C`,
-		},
-		{
-			Code:     `‘C’`,
-			Expected:  `C`,
-		},
-		{
-			Code:     `“C”`,
-			Expected:  `C`,
-		},
-		{
-			Code:     `«C»`,
-			Expected:  `C`,
-		},
-
-
-
-		{
-			Code:     `'d'`,
-			Expected:  `d`,
-		},
-		{
-			Code:     `"d"`,
-			Expected:  `d`,
-		},
-		{
-			Code:     `‘d’`,
-			Expected:  `d`,
-		},
-		{
-			Code:     `“d”`,
-			Expected:  `d`,
-		},
-		{
-			Code:     `«d»`,
-			Expected:  `d`,
-		},
-
-
-
-		{
-			Code:     `'D'`,
-			Expected:  `D`,
-		},
-		{
-			Code:     `"D"`,
-			Expected:  `D`,
-		},
-		{
-			Code:     `‘D’`,
-			Expected:  `D`,
-		},
-		{
-			Code:     `“D”`,
-			Expected:  `D`,
-		},
-		{
-			Code:     `«D»`,
-			Expected:  `D`,
-		},
-
-
-
-		{
-			Code:     `'e'`,
-			Expected:  `e`,
-		},
-		{
-			Code:     `"e"`,
-			Expected:  `e`,
-		},
-		{
-			Code:     `‘e’`,
-			Expected:  `e`,
-		},
-		{
-			Code:     `“e”`,
-			Expected:  `e`,
-		},
-		{
-			Code:     `«e»`,
-			Expected:  `e`,
-		},
-
-
-
-		{
-			Code:     `'E'`,
-			Expected:  `E`,
-		},
-		{
-			Code:     `"E"`,
-			Expected:  `E`,
-		},
-		{
-			Code:     `‘E’`,
-			Expected:  `E`,
-		},
-		{
-			Code:     `“E”`,
-			Expected:  `E`,
-		},
-		{
-			Code:     `«E»`,
-			Expected:  `E`,
-		},
-
-
-
-		{
-			Code:     `'0'`,
-			Expected:  `0`,
-		},
-		{
-			Code:     `"0"`,
-			Expected:  `0`,
-		},
-		{
-			Code:     `‘0’`,
-			Expected:  `0`,
-		},
-		{
-			Code:     `“0”`,
-			Expected:  `0`,
-		},
-		{
-			Code:     `«0»`,
-			Expected:  `0`,
-		},
-
-
-
-		{
-			Code:     `'1'`,
-			Expected:  `1`,
-		},
-		{
-			Code:     `"1"`,
-			Expected:  `1`,
-		},
-		{
-			Code:     `‘1’`,
-			Expected:  `1`,
-		},
-		{
-			Code:     `“1”`,
-			Expected:  `1`,
-		},
-		{
-			Code:     `«1»`,
-			Expected:  `1`,
-		},
-
-
-
-		{
-			Code:     `'2'`,
-			Expected:  `2`,
-		},
-		{
-			Code:     `"2"`,
-			Expected:  `2`,
-		},
-		{
-			Code:     `‘2’`,
-			Expected:  `2`,
-		},
-		{
-			Code:     `“2”`,
-			Expected:  `2`,
-		},
-		{
-			Code:     `«2»`,
-			Expected:  `2`,
-		},
-
-
-
-		{
-			Code:     `'3'`,
-			Expected:  `3`,
-		},
-		{
-			Code:     `"3"`,
-			Expected:  `3`,
-		},
-		{
-			Code:     `‘3’`,
-			Expected:  `3`,
-		},
-		{
-			Code:     `“3”`,
-			Expected:  `3`,
-		},
-		{
-			Code:     `«3»`,
-			Expected:  `3`,
-		},
-
-
-
-		{
-			Code:     `'4'`,
-			Expected:  `4`,
-		},
-		{
-			Code:     `"4"`,
-			Expected:  `4`,
-		},
-		{
-			Code:     `‘4’`,
-			Expected:  `4`,
-		},
-		{
-			Code:     `“4”`,
-			Expected:  `4`,
-		},
-		{
-			Code:     `«4»`,
-			Expected:  `4`,
-		},
-
-
-
-		{
-			Code:     `'5'`,
-			Expected:  `5`,
-		},
-		{
-			Code:     `"5"`,
-			Expected:  `5`,
-		},
-		{
-			Code:     `‘5’`,
-			Expected:  `5`,
-		},
-		{
-			Code:     `“5”`,
-			Expected:  `5`,
-		},
-		{
-			Code:     `«5»`,
-			Expected:  `5`,
-		},
-
-
-
-		{
-			Code:     `'6'`,
-			Expected:  `6`,
-		},
-		{
-			Code:     `"6"`,
-			Expected:  `6`,
-		},
-		{
-			Code:     `‘6’`,
-			Expected:  `6`,
-		},
-		{
-			Code:     `“6”`,
-			Expected:  `6`,
-		},
-		{
-			Code:     `«6»`,
-			Expected:  `6`,
-		},
-
-
-
-		{
-			Code:     `'7'`,
-			Expected:  `7`,
-		},
-		{
-			Code:     `"7"`,
-			Expected:  `7`,
-		},
-		{
-			Code:     `‘7’`,
-			Expected:  `7`,
-		},
-		{
-			Code:     `“7”`,
-			Expected:  `7`,
-		},
-		{
-			Code:     `«7»`,
-			Expected:  `7`,
-		},
-
-
-
-		{
-			Code:     `'8'`,
-			Expected:  `8`,
-		},
-		{
-			Code:     `"8"`,
-			Expected:  `8`,
-		},
-		{
-			Code:     `‘8’`,
-			Expected:  `8`,
-		},
-		{
-			Code:     `“8”`,
-			Expected:  `8`,
-		},
-		{
-			Code:     `«8»`,
-			Expected:  `8`,
-		},
-
-
-
-		{
-			Code:     `'9'`,
-			Expected:  `9`,
-		},
-		{
-			Code:     `"9"`,
-			Expected:  `9`,
-		},
-		{
-			Code:     `‘9’`,
-			Expected:  `9`,
-		},
-		{
-			Code:     `“9”`,
-			Expected:  `9`,
-		},
-		{
-			Code:     `«9»`,
-			Expected:  `9`,
+			Code:     `« »`,
+			Expected:  ` `,
 		},
 
 
@@ -534,6 +647,10 @@ func TestCompile(t *testing.T) {
 		},
 		{
 			Code:     `“123456789”`,
+			Expected:  `123456789`,
+		},
+		{
+			Code:     `‹123456789›`,
 			Expected:  `123456789`,
 		},
 		{
@@ -557,6 +674,10 @@ func TestCompile(t *testing.T) {
 		},
 		{
 			Code:     `“a1b2c3d4e5f6g7h8i9”`,
+			Expected:  `a1b2c3d4e5f6g7h8i9`,
+		},
+		{
+			Code:     `‹a1b2c3d4e5f6g7h8i9›`,
 			Expected:  `a1b2c3d4e5f6g7h8i9`,
 		},
 		{
@@ -813,6 +934,10 @@ func TestCompile(t *testing.T) {
 			Expected:  `apple banana cherry`,
 		},
 		{
+			Code:     `‹apple banana cherry›`,
+			Expected:  `apple banana cherry`,
+		},
+		{
 			Code:     `«apple banana cherry»`,
 			Expected:  `apple banana cherry`,
 		},
@@ -934,6 +1059,10 @@ func TestCompile(t *testing.T) {
 		},
 		{
 			Code:     `“\0”`,
+			Expected:  "\u0000",
+		},
+		{
+			Code:     `‹\0›`,
 			Expected:  "\u0000",
 		},
 		{
@@ -1307,3209 +1436,6 @@ func TestCompile(t *testing.T) {
 		{
 			Code:     `«\”»`,
 			Expected:   `”`,
-		},
-
-
-
-		{
-			Code:     `'\x00'`,
-			Expected:  "\x00",
-		},
-		{
-			Code:     `"\x00"`,
-			Expected:  "\x00",
-		},
-		{
-			Code:     `‘\x00’`,
-			Expected:  "\x00",
-		},
-		{
-			Code:     `“\x00”`,
-			Expected:  "\x00",
-		},
-		{
-			Code:     `«\x00»`,
-			Expected:  "\x00",
-		},
-
-
-
-		{
-			Code:     `'\x01'`,
-			Expected:  "\x01",
-		},
-		{
-			Code:     `"\x01"`,
-			Expected:  "\x01",
-		},
-		{
-			Code:     `‘\x01’`,
-			Expected:  "\x01",
-		},
-		{
-			Code:     `“\x01”`,
-			Expected:  "\x01",
-		},
-		{
-			Code:     `«\x01»`,
-			Expected:  "\x01",
-		},
-
-
-
-		{
-			Code:     `'\x02'`,
-			Expected:  "\x02",
-		},
-		{
-			Code:     `"\x02"`,
-			Expected:  "\x02",
-		},
-		{
-			Code:     `‘\x02’`,
-			Expected:  "\x02",
-		},
-		{
-			Code:     `“\x02”`,
-			Expected:  "\x02",
-		},
-		{
-			Code:     `«\x02»`,
-			Expected:  "\x02",
-		},
-
-
-
-		{
-			Code:     `'\x03'`,
-			Expected:  "\x03",
-		},
-		{
-			Code:     `"\x03"`,
-			Expected:  "\x03",
-		},
-		{
-			Code:     `‘\x03’`,
-			Expected:  "\x03",
-		},
-		{
-			Code:     `“\x03”`,
-			Expected:  "\x03",
-		},
-		{
-			Code:     `«\x03»`,
-			Expected:  "\x03",
-		},
-
-
-
-		{
-			Code:     `'\x04'`,
-			Expected:  "\x04",
-		},
-		{
-			Code:     `"\x04"`,
-			Expected:  "\x04",
-		},
-		{
-			Code:     `‘\x04’`,
-			Expected:  "\x04",
-		},
-		{
-			Code:     `“\x04”`,
-			Expected:  "\x04",
-		},
-		{
-			Code:     `«\x04»`,
-			Expected:  "\x04",
-		},
-
-
-
-		{
-			Code:     `'\x05'`,
-			Expected:  "\x05",
-		},
-		{
-			Code:     `"\x05"`,
-			Expected:  "\x05",
-		},
-		{
-			Code:     `‘\x05’`,
-			Expected:  "\x05",
-		},
-		{
-			Code:     `“\x05”`,
-			Expected:  "\x05",
-		},
-		{
-			Code:     `«\x05»`,
-			Expected:  "\x05",
-		},
-
-
-
-		{
-			Code:     `'\x06'`,
-			Expected:  "\x06",
-		},
-		{
-			Code:     `"\x06"`,
-			Expected:  "\x06",
-		},
-		{
-			Code:     `‘\x06’`,
-			Expected:  "\x06",
-		},
-		{
-			Code:     `“\x06”`,
-			Expected:  "\x06",
-		},
-		{
-			Code:     `«\x06»`,
-			Expected:  "\x06",
-		},
-
-
-
-		{
-			Code:     `'\x07'`,
-			Expected:  "\x07",
-		},
-		{
-			Code:     `"\x07"`,
-			Expected:  "\x07",
-		},
-		{
-			Code:     `‘\x07’`,
-			Expected:  "\x07",
-		},
-		{
-			Code:     `“\x07”`,
-			Expected:  "\x07",
-		},
-		{
-			Code:     `«\x07»`,
-			Expected:  "\x07",
-		},
-
-
-
-		{
-			Code:     `'\x08'`,
-			Expected:  "\x08",
-		},
-		{
-			Code:     `"\x08"`,
-			Expected:  "\x08",
-		},
-		{
-			Code:     `‘\x08’`,
-			Expected:  "\x08",
-		},
-		{
-			Code:     `“\x08”`,
-			Expected:  "\x08",
-		},
-		{
-			Code:     `«\x08»`,
-			Expected:  "\x08",
-		},
-
-
-
-		{
-			Code:     `'\x09'`,
-			Expected:  "\x09",
-		},
-		{
-			Code:     `"\x09"`,
-			Expected:  "\x09",
-		},
-		{
-			Code:     `‘\x09’`,
-			Expected:  "\x09",
-		},
-		{
-			Code:     `“\x09”`,
-			Expected:  "\x09",
-		},
-		{
-			Code:     `«\x09»`,
-			Expected:  "\x09",
-		},
-
-
-
-		{
-			Code:     `'\x0A'`,
-			Expected:  "\x0A",
-		},
-		{
-			Code:     `"\x0A"`,
-			Expected:  "\x0A",
-		},
-		{
-			Code:     `‘\x0A’`,
-			Expected:  "\x0A",
-		},
-		{
-			Code:     `“\x0A”`,
-			Expected:  "\x0A",
-		},
-		{
-			Code:     `«\x0A»`,
-			Expected:  "\x0A",
-		},
-
-
-
-		{
-			Code:     `'\x0a'`,
-			Expected:  "\x0a",
-		},
-		{
-			Code:     `"\x0a"`,
-			Expected:  "\x0a",
-		},
-		{
-			Code:     `‘\x0a’`,
-			Expected:  "\x0a",
-		},
-		{
-			Code:     `“\x0a”`,
-			Expected:  "\x0a",
-		},
-		{
-			Code:     `«\x0a»`,
-			Expected:  "\x0a",
-		},
-
-
-
-		{
-			Code:     `'\x0B'`,
-			Expected:  "\x0B",
-		},
-		{
-			Code:     `"\x0B"`,
-			Expected:  "\x0B",
-		},
-		{
-			Code:     `‘\x0B’`,
-			Expected:  "\x0B",
-		},
-		{
-			Code:     `“\x0B”`,
-			Expected:  "\x0B",
-		},
-		{
-			Code:     `«\x0B»`,
-			Expected:  "\x0b",
-		},
-
-
-
-		{
-			Code:     `'\x0b'`,
-			Expected:  "\x0b",
-		},
-		{
-			Code:     `"\x0b"`,
-			Expected:  "\x0b",
-		},
-		{
-			Code:     `‘\x0b’`,
-			Expected:  "\x0b",
-		},
-		{
-			Code:     `“\x0b”`,
-			Expected:  "\x0b",
-		},
-		{
-			Code:     `«\x0b»`,
-			Expected:  "\x0b",
-		},
-
-
-
-		{
-			Code:     `'\x0C'`,
-			Expected:  "\x0C",
-		},
-		{
-			Code:     `"\x0C"`,
-			Expected:  "\x0C",
-		},
-		{
-			Code:     `‘\x0C’`,
-			Expected:  "\x0C",
-		},
-		{
-			Code:     `“\x0C”`,
-			Expected:  "\x0C",
-		},
-		{
-			Code:     `«\x0C»`,
-			Expected:  "\x0C",
-		},
-
-
-
-		{
-			Code:     `'\x0c'`,
-			Expected:  "\x0c",
-		},
-		{
-			Code:     `"\x0c"`,
-			Expected:  "\x0c",
-		},
-		{
-			Code:     `‘\x0c’`,
-			Expected:  "\x0c",
-		},
-		{
-			Code:     `“\x0c”`,
-			Expected:  "\x0c",
-		},
-		{
-			Code:     `«\x0c»`,
-			Expected:  "\x0c",
-		},
-
-
-
-		{
-			Code:     `'\x0D'`,
-			Expected:  "\x0D",
-		},
-		{
-			Code:     `"\x0D"`,
-			Expected:  "\x0D",
-		},
-		{
-			Code:     `‘\x0D’`,
-			Expected:  "\x0D",
-		},
-		{
-			Code:     `“\x0D”`,
-			Expected:  "\x0D",
-		},
-		{
-			Code:     `«\x0D»`,
-			Expected:  "\x0D",
-		},
-
-
-
-		{
-			Code:     `'\x0d'`,
-			Expected:  "\x0d",
-		},
-		{
-			Code:     `"\x0d"`,
-			Expected:  "\x0d",
-		},
-		{
-			Code:     `‘\x0d’`,
-			Expected:  "\x0d",
-		},
-		{
-			Code:     `“\x0d”`,
-			Expected:  "\x0d",
-		},
-		{
-			Code:     `«\x0d»`,
-			Expected:  "\x0d",
-		},
-
-
-
-		{
-			Code:     `'\x0E'`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `"\x0E"`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `‘\x0E’`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `“\x0E”`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `«\x0E»`,
-			Expected:  "\x0e",
-		},
-
-
-
-		{
-			Code:     `'\x0e'`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `"\x0e"`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `‘\x0e’`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `“\x0e”`,
-			Expected:  "\x0e",
-		},
-		{
-			Code:     `«\x0e»`,
-			Expected:  "\x0e",
-		},
-
-
-
-		{
-			Code:     `'\x0F'`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `"\x0F"`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `‘\x0F’`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `“\x0F”`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `«\x0F»`,
-			Expected:  "\x0f",
-		},
-
-
-
-		{
-			Code:     `'\x0f'`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `"\x0f"`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `‘\x0f’`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `“\x0f”`,
-			Expected:  "\x0f",
-		},
-		{
-			Code:     `«\x0f»`,
-			Expected:  "\x0f",
-		},
-
-
-
-		{
-			Code:     `'\x10'`,
-			Expected:  "\x10",
-		},
-		{
-			Code:     `"\x10"`,
-			Expected:  "\x10",
-		},
-		{
-			Code:     `‘\x10’`,
-			Expected:  "\x10",
-		},
-		{
-			Code:     `“\x10”`,
-			Expected:  "\x10",
-		},
-		{
-			Code:     `«\x10»`,
-			Expected:  "\x10",
-		},
-
-
-
-		{
-			Code:     `'\x11'`,
-			Expected:  "\x11",
-		},
-		{
-			Code:     `"\x11"`,
-			Expected:  "\x11",
-		},
-		{
-			Code:     `‘\x11’`,
-			Expected:  "\x11",
-		},
-		{
-			Code:     `“\x11”`,
-			Expected:  "\x11",
-		},
-		{
-			Code:     `«\x11»`,
-			Expected:  "\x11",
-		},
-
-
-
-		{
-			Code:     `'\x12'`,
-			Expected:  "\x12",
-		},
-		{
-			Code:     `"\x12"`,
-			Expected:  "\x12",
-		},
-		{
-			Code:     `‘\x12’`,
-			Expected:  "\x12",
-		},
-		{
-			Code:     `“\x12”`,
-			Expected:  "\x12",
-		},
-		{
-			Code:     `«\x12»`,
-			Expected:  "\x12",
-		},
-
-
-
-		{
-			Code:     `'\x13'`,
-			Expected:  "\x13",
-		},
-		{
-			Code:     `"\x13"`,
-			Expected:  "\x13",
-		},
-		{
-			Code:     `‘\x13’`,
-			Expected:  "\x13",
-		},
-		{
-			Code:     `“\x13”`,
-			Expected:  "\x13",
-		},
-		{
-			Code:     `«\x13»`,
-			Expected:  "\x13",
-		},
-
-
-
-		{
-			Code:     `'\x14'`,
-			Expected:  "\x14",
-		},
-		{
-			Code:     `"\x14"`,
-			Expected:  "\x14",
-		},
-		{
-			Code:     `‘\x14’`,
-			Expected:  "\x14",
-		},
-		{
-			Code:     `“\x14”`,
-			Expected:  "\x14",
-		},
-		{
-			Code:     `«\x14»`,
-			Expected:  "\x14",
-		},
-
-
-
-		{
-			Code:     `'\x15'`,
-			Expected:  "\x15",
-		},
-		{
-			Code:     `"\x15"`,
-			Expected:  "\x15",
-		},
-		{
-			Code:     `‘\x15’`,
-			Expected:  "\x15",
-		},
-		{
-			Code:     `“\x15”`,
-			Expected:  "\x15",
-		},
-		{
-			Code:     `«\x15»`,
-			Expected:  "\x15",
-		},
-
-
-
-		{
-			Code:     `'\x16'`,
-			Expected:  "\x16",
-		},
-		{
-			Code:     `"\x16"`,
-			Expected:  "\x16",
-		},
-		{
-			Code:     `‘\x16’`,
-			Expected:  "\x16",
-		},
-		{
-			Code:     `“\x16”`,
-			Expected:  "\x16",
-		},
-		{
-			Code:     `«\x16»`,
-			Expected:  "\x16",
-		},
-
-
-
-		{
-			Code:     `'\x17'`,
-			Expected:  "\x17",
-		},
-		{
-			Code:     `"\x17"`,
-			Expected:  "\x17",
-		},
-		{
-			Code:     `‘\x17’`,
-			Expected:  "\x17",
-		},
-		{
-			Code:     `“\x17”`,
-			Expected:  "\x17",
-		},
-		{
-			Code:     `«\x17»`,
-			Expected:  "\x17",
-		},
-
-
-
-		{
-			Code:     `'\x18'`,
-			Expected:  "\x18",
-		},
-		{
-			Code:     `"\x18"`,
-			Expected:  "\x18",
-		},
-		{
-			Code:     `‘\x18’`,
-			Expected:  "\x18",
-		},
-		{
-			Code:     `“\x18”`,
-			Expected:  "\x18",
-		},
-		{
-			Code:     `«\x18»`,
-			Expected:  "\x18",
-		},
-
-
-
-		{
-			Code:     `'\x19'`,
-			Expected:  "\x19",
-		},
-		{
-			Code:     `"\x19"`,
-			Expected:  "\x19",
-		},
-		{
-			Code:     `‘\x19’`,
-			Expected:  "\x19",
-		},
-		{
-			Code:     `“\x19”`,
-			Expected:  "\x19",
-		},
-		{
-			Code:     `«\x19»`,
-			Expected:  "\x19",
-		},
-
-
-
-		{
-			Code:     `'\x1A'`,
-			Expected:  "\x1A",
-		},
-		{
-			Code:     `"\x1A"`,
-			Expected:  "\x1A",
-		},
-		{
-			Code:     `‘\x1A’`,
-			Expected:  "\x1A",
-		},
-		{
-			Code:     `“\x1A”`,
-			Expected:  "\x1A",
-		},
-		{
-			Code:     `«\x1A»`,
-			Expected:  "\x1A",
-		},
-
-
-
-		{
-			Code:     `'\x1a'`,
-			Expected:  "\x1a",
-		},
-		{
-			Code:     `"\x1a"`,
-			Expected:  "\x1a",
-		},
-		{
-			Code:     `‘\x1a’`,
-			Expected:  "\x1a",
-		},
-		{
-			Code:     `“\x1a”`,
-			Expected:  "\x1a",
-		},
-		{
-			Code:     `«\x1a»`,
-			Expected:  "\x1a",
-		},
-
-
-
-		{
-			Code:     `'\x1B'`,
-			Expected:  "\x1B",
-		},
-		{
-			Code:     `"\x1B"`,
-			Expected:  "\x1B",
-		},
-		{
-			Code:     `‘\x1B’`,
-			Expected:  "\x1B",
-		},
-		{
-			Code:     `“\x1B”`,
-			Expected:  "\x1B",
-		},
-		{
-			Code:     `«\x1B»`,
-			Expected:  "\x1B",
-		},
-
-
-
-		{
-			Code:     `'\x1b'`,
-			Expected:  "\x1b",
-		},
-		{
-			Code:     `"\x1b"`,
-			Expected:  "\x1b",
-		},
-		{
-			Code:     `‘\x1b’`,
-			Expected:  "\x1b",
-		},
-		{
-			Code:     `“\x1b”`,
-			Expected:  "\x1b",
-		},
-		{
-			Code:     `«\x1b»`,
-			Expected:  "\x1b",
-		},
-
-
-
-		{
-			Code:     `'\x1C'`,
-			Expected:  "\x1C",
-		},
-		{
-			Code:     `"\x1C"`,
-			Expected:  "\x1C",
-		},
-		{
-			Code:     `‘\x1C’`,
-			Expected:  "\x1C",
-		},
-		{
-			Code:     `“\x1C”`,
-			Expected:  "\x1C",
-		},
-		{
-			Code:     `«\x1C»`,
-			Expected:  "\x1C",
-		},
-
-
-
-		{
-			Code:     `'\x1c'`,
-			Expected:  "\x1c",
-		},
-		{
-			Code:     `"\x1c"`,
-			Expected:  "\x1c",
-		},
-		{
-			Code:     `‘\x1c’`,
-			Expected:  "\x1c",
-		},
-		{
-			Code:     `“\x1c”`,
-			Expected:  "\x1c",
-		},
-		{
-			Code:     `«\x1c»`,
-			Expected:  "\x1c",
-		},
-
-
-
-		{
-			Code:     `'\x1D'`,
-			Expected:  "\x1D",
-		},
-		{
-			Code:     `"\x1D"`,
-			Expected:  "\x1D",
-		},
-		{
-			Code:     `‘\x1D’`,
-			Expected:  "\x1D",
-		},
-		{
-			Code:     `“\x1D”`,
-			Expected:  "\x1D",
-		},
-		{
-			Code:     `«\x1D»`,
-			Expected:  "\x1D",
-		},
-
-
-
-		{
-			Code:     `'\x1d'`,
-			Expected:  "\x1d",
-		},
-		{
-			Code:     `"\x1d"`,
-			Expected:  "\x1d",
-		},
-		{
-			Code:     `‘\x1d’`,
-			Expected:  "\x1d",
-		},
-		{
-			Code:     `“\x1d”`,
-			Expected:  "\x1d",
-		},
-		{
-			Code:     `«\x1d»`,
-			Expected:  "\x1d",
-		},
-
-
-
-		{
-			Code:     `'\x1E'`,
-			Expected:  "\x1E",
-		},
-		{
-			Code:     `"\x1E"`,
-			Expected:  "\x1E",
-		},
-		{
-			Code:     `‘\x1E’`,
-			Expected:  "\x1E",
-		},
-		{
-			Code:     `“\x1E”`,
-			Expected:  "\x1E",
-		},
-		{
-			Code:     `«\x1E»`,
-			Expected:  "\x1E",
-		},
-
-
-
-		{
-			Code:     `'\x1e'`,
-			Expected:  "\x1e",
-		},
-		{
-			Code:     `"\x1e"`,
-			Expected:  "\x1e",
-		},
-		{
-			Code:     `‘\x1e’`,
-			Expected:  "\x1e",
-		},
-		{
-			Code:     `“\x1e”`,
-			Expected:  "\x1e",
-		},
-		{
-			Code:     `«\x1e»`,
-			Expected:  "\x1e",
-		},
-
-
-
-		{
-			Code:     `'\x1F'`,
-			Expected:  "\x1F",
-		},
-		{
-			Code:     `"\x1F"`,
-			Expected:  "\x1F",
-		},
-		{
-			Code:     `‘\x1F’`,
-			Expected:  "\x1F",
-		},
-		{
-			Code:     `“\x1F”`,
-			Expected:  "\x1F",
-		},
-		{
-			Code:     `«\x1F»`,
-			Expected:  "\x1F",
-		},
-
-
-
-		{
-			Code:     `'\x1f'`,
-			Expected:  "\x1f",
-		},
-		{
-			Code:     `"\x1f"`,
-			Expected:  "\x1f",
-		},
-		{
-			Code:     `‘\x1f’`,
-			Expected:  "\x1f",
-		},
-		{
-			Code:     `“\x1f”`,
-			Expected:  "\x1f",
-		},
-		{
-			Code:     `«\x1f»`,
-			Expected:  "\x1f",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\xAA'`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `"\xAA"`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `‘\xAA’`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `“\xAA”`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `«\xAA»`,
-			Expected:  "ª",
-		},
-
-
-
-		{
-			Code:     `'\xAa'`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `"\xAa"`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `‘\xAa’`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `“\xAa”`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `«\xAa»`,
-			Expected:  "ª",
-		},
-
-
-
-		{
-			Code:     `'\xaA'`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `"\xaA"`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `‘\xaA’`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `“\xaA”`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `«\xaA»`,
-			Expected:  "ª",
-		},
-
-
-
-		{
-			Code:     `'\xaa'`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `"\xaa"`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `‘\xaa’`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `“\xaa”`,
-			Expected:  "ª",
-		},
-		{
-			Code:     `«\xaa»`,
-			Expected:  "ª",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\xFF'`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `"\xFF"`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `‘\xFF’`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `“\xFF”`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `«\xFF»`,
-			Expected:  "ÿ",
-		},
-
-
-
-		{
-			Code:     `'\xFf'`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `"\xFf"`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `‘\xFf’`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `“\xFf”`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `«\xFf»`,
-			Expected:  "ÿ",
-		},
-
-
-
-		{
-			Code:     `'\xfF'`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `"\xfF"`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `‘\xfF’`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `“\xfF”`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `«\xfF»`,
-			Expected:  "ÿ",
-		},
-
-
-
-		{
-			Code:     `'\xff'`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `"\xff"`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `‘\xff’`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `“\xff”`,
-			Expected:  "ÿ",
-		},
-		{
-			Code:     `«\xff»`,
-			Expected:  "ÿ",
-		},
-
-
-
-		{
-			Code:     `'\u0000'`,
-			Expected:  "\u0000",
-		},
-		{
-			Code:     `"\u0000"`,
-			Expected:  "\u0000",
-		},
-		{
-			Code:     `‘\u0000’`,
-			Expected:  "\u0000",
-		},
-		{
-			Code:     `“\u0000”`,
-			Expected:  "\u0000",
-		},
-		{
-			Code:     `«\u0000»`,
-			Expected:  "\u0000",
-		},
-
-
-
-
-		{
-			Code:     `'\u0001'`,
-			Expected:  "\u0001",
-		},
-		{
-			Code:     `"\u0001"`,
-			Expected:  "\u0001",
-		},
-		{
-			Code:     `‘\u0001’`,
-			Expected:  "\u0001",
-		},
-		{
-			Code:     `“\u0001”`,
-			Expected:  "\u0001",
-		},
-		{
-			Code:     `«\u0001»`,
-			Expected:  "\u0001",
-		},
-
-
-
-
-		{
-			Code:     `'\u0002'`,
-			Expected:  "\u0002",
-		},
-		{
-			Code:     `"\u0002"`,
-			Expected:  "\u0002",
-		},
-		{
-			Code:     `‘\u0002’`,
-			Expected:  "\u0002",
-		},
-		{
-			Code:     `“\u0002”`,
-			Expected:  "\u0002",
-		},
-		{
-			Code:     `«\u0002»`,
-			Expected:  "\u0002",
-		},
-
-
-
-
-		{
-			Code:     `'\u0003'`,
-			Expected:  "\u0003",
-		},
-		{
-			Code:     `"\u0003"`,
-			Expected:  "\u0003",
-		},
-		{
-			Code:     `‘\u0003’`,
-			Expected:  "\u0003",
-		},
-		{
-			Code:     `“\u0003”`,
-			Expected:  "\u0003",
-		},
-		{
-			Code:     `«\u0003»`,
-			Expected:  "\u0003",
-		},
-
-
-
-
-		{
-			Code:     `'\u0004'`,
-			Expected:  "\u0004",
-		},
-		{
-			Code:     `"\u0004"`,
-			Expected:  "\u0004",
-		},
-		{
-			Code:     `‘\u0004’`,
-			Expected:  "\u0004",
-		},
-		{
-			Code:     `“\u0004”`,
-			Expected:  "\u0004",
-		},
-		{
-			Code:     `«\u0004»`,
-			Expected:  "\u0004",
-		},
-
-
-
-
-		{
-			Code:     `'\u0005'`,
-			Expected:  "\u0005",
-		},
-		{
-			Code:     `"\u0005"`,
-			Expected:  "\u0005",
-		},
-		{
-			Code:     `‘\u0005’`,
-			Expected:  "\u0005",
-		},
-		{
-			Code:     `“\u0005”`,
-			Expected:  "\u0005",
-		},
-		{
-			Code:     `«\u0005»`,
-			Expected:  "\u0005",
-		},
-
-
-
-		{
-			Code:     `'\u0006'`,
-			Expected:  "\u0006",
-		},
-		{
-			Code:     `"\u0006"`,
-			Expected:  "\u0006",
-		},
-		{
-			Code:     `‘\u0006’`,
-			Expected:  "\u0006",
-		},
-		{
-			Code:     `“\u0006”`,
-			Expected:  "\u0006",
-		},
-		{
-			Code:     `«\u0006»`,
-			Expected:  "\u0006",
-		},
-
-
-
-		{
-			Code:     `'\u0007'`,
-			Expected:  "\u0007",
-		},
-		{
-			Code:     `"\u0007"`,
-			Expected:  "\u0007",
-		},
-		{
-			Code:     `‘\u0007’`,
-			Expected:  "\u0007",
-		},
-		{
-			Code:     `“\u0007”`,
-			Expected:  "\u0007",
-		},
-		{
-			Code:     `«\u0007»`,
-			Expected:  "\u0007",
-		},
-
-
-
-		{
-			Code:     `'\u0008'`,
-			Expected:  "\u0008",
-		},
-		{
-			Code:     `"\u0008"`,
-			Expected:  "\u0008",
-		},
-		{
-			Code:     `‘\u0008’`,
-			Expected:  "\u0008",
-		},
-		{
-			Code:     `“\u0008”`,
-			Expected:  "\u0008",
-		},
-		{
-			Code:     `«\u0008»`,
-			Expected:  "\u0008",
-		},
-
-
-
-		{
-			Code:     `'\u0009'`,
-			Expected:  "\u0009",
-		},
-		{
-			Code:     `"\u0009"`,
-			Expected:  "\u0009",
-		},
-		{
-			Code:     `‘\u0009’`,
-			Expected:  "\u0009",
-		},
-		{
-			Code:     `“\u0009”`,
-			Expected:  "\u0009",
-		},
-		{
-			Code:     `«\u0009»`,
-			Expected:  "\u0009",
-		},
-
-
-
-		{
-			Code:     `'\u000A'`,
-			Expected:  "\u000A",
-		},
-		{
-			Code:     `"\u000A"`,
-			Expected:  "\u000A",
-		},
-		{
-			Code:     `‘\u000A’`,
-			Expected:  "\u000A",
-		},
-		{
-			Code:     `“\u000A”`,
-			Expected:  "\u000A",
-		},
-		{
-			Code:     `«\u000A»`,
-			Expected:  "\u000A",
-		},
-
-
-
-		{
-			Code:     `'\u000a'`,
-			Expected:  "\u000a",
-		},
-		{
-			Code:     `"\u000a"`,
-			Expected:  "\u000a",
-		},
-		{
-			Code:     `‘\u000a’`,
-			Expected:  "\u000a",
-		},
-		{
-			Code:     `“\u000a”`,
-			Expected:  "\u000a",
-		},
-		{
-			Code:     `«\u000a»`,
-			Expected:  "\u000a",
-		},
-
-
-
-		{
-			Code:     `'\u000B'`,
-			Expected:  "\u000B",
-		},
-		{
-			Code:     `"\u000B"`,
-			Expected:  "\u000B",
-		},
-		{
-			Code:     `‘\u000B’`,
-			Expected:  "\u000B",
-		},
-		{
-			Code:     `“\u000B”`,
-			Expected:  "\u000B",
-		},
-		{
-			Code:     `«\u000B»`,
-			Expected:  "\u000B",
-		},
-
-
-
-		{
-			Code:     `'\u000b'`,
-			Expected:  "\u000b",
-		},
-		{
-			Code:     `"\u000b"`,
-			Expected:  "\u000b",
-		},
-		{
-			Code:     `‘\u000b’`,
-			Expected:  "\u000b",
-		},
-		{
-			Code:     `“\u000b”`,
-			Expected:  "\u000b",
-		},
-		{
-			Code:     `«\u000b»`,
-			Expected:  "\u000b",
-		},
-
-
-
-		{
-			Code:     `'\u000C'`,
-			Expected:  "\u000C",
-		},
-		{
-			Code:     `"\u000C"`,
-			Expected:  "\u000C",
-		},
-		{
-			Code:     `‘\u000C’`,
-			Expected:  "\u000C",
-		},
-		{
-			Code:     `“\u000C”`,
-			Expected:  "\u000C",
-		},
-		{
-			Code:     `«\u000C»`,
-			Expected:  "\u000C",
-		},
-
-
-
-		{
-			Code:     `'\u000c'`,
-			Expected:  "\u000c",
-		},
-		{
-			Code:     `"\u000c"`,
-			Expected:  "\u000c",
-		},
-		{
-			Code:     `‘\u000c’`,
-			Expected:  "\u000c",
-		},
-		{
-			Code:     `“\u000c”`,
-			Expected:  "\u000c",
-		},
-		{
-			Code:     `«\u000c»`,
-			Expected:  "\u000c",
-		},
-
-
-
-		{
-			Code:     `'\u000D'`,
-			Expected:  "\u000D",
-		},
-		{
-			Code:     `"\u000D"`,
-			Expected:  "\u000D",
-		},
-		{
-			Code:     `‘\u000D’`,
-			Expected:  "\u000D",
-		},
-		{
-			Code:     `“\u000D”`,
-			Expected:  "\u000D",
-		},
-		{
-			Code:     `«\u000D»`,
-			Expected:  "\u000D",
-		},
-
-
-
-		{
-			Code:     `'\u000d'`,
-			Expected:  "\u000d",
-		},
-		{
-			Code:     `"\u000d"`,
-			Expected:  "\u000d",
-		},
-		{
-			Code:     `‘\u000d’`,
-			Expected:  "\u000d",
-		},
-		{
-			Code:     `“\u000d”`,
-			Expected:  "\u000d",
-		},
-		{
-			Code:     `«\u000d»`,
-			Expected:  "\u000d",
-		},
-
-
-
-		{
-			Code:     `'\u000E'`,
-			Expected:  "\u000E",
-		},
-		{
-			Code:     `"\u000E"`,
-			Expected:  "\u000E",
-		},
-		{
-			Code:     `‘\u000E’`,
-			Expected:  "\u000E",
-		},
-		{
-			Code:     `“\u000E”`,
-			Expected:  "\u000E",
-		},
-		{
-			Code:     `«\u000E»`,
-			Expected:  "\u000E",
-		},
-
-
-
-		{
-			Code:     `'\u000e'`,
-			Expected:  "\u000e",
-		},
-		{
-			Code:     `"\u000e"`,
-			Expected:  "\u000e",
-		},
-		{
-			Code:     `‘\u000e’`,
-			Expected:  "\u000e",
-		},
-		{
-			Code:     `“\u000e”`,
-			Expected:  "\u000e",
-		},
-		{
-			Code:     `«\u000e»`,
-			Expected:  "\u000e",
-		},
-
-
-
-		{
-			Code:     `'\u000F'`,
-			Expected:  "\u000F",
-		},
-		{
-			Code:     `"\u000F"`,
-			Expected:  "\u000F",
-		},
-		{
-			Code:     `‘\u000F’`,
-			Expected:  "\u000F",
-		},
-		{
-			Code:     `“\u000F”`,
-			Expected:  "\u000F",
-		},
-		{
-			Code:     `«\u000F»`,
-			Expected:  "\u000F",
-		},
-
-
-
-		{
-			Code:     `'\u000f'`,
-			Expected:  "\u000f",
-		},
-		{
-			Code:     `"\u000f"`,
-			Expected:  "\u000f",
-		},
-		{
-			Code:     `‘\u000f’`,
-			Expected:  "\u000f",
-		},
-		{
-			Code:     `“\u000f”`,
-			Expected:  "\u000f",
-		},
-		{
-			Code:     `«\u000f»`,
-			Expected:  "\u000f",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\u0010'`,
-			Expected:  "\u0010",
-		},
-		{
-			Code:     `"\u0010"`,
-			Expected:  "\u0010",
-		},
-		{
-			Code:     `‘\u0010’`,
-			Expected:  "\u0010",
-		},
-		{
-			Code:     `“\u0010”`,
-			Expected:  "\u0010",
-		},
-		{
-			Code:     `«\u0010»`,
-			Expected:  "\u0010",
-		},
-
-
-
-		{
-			Code:     `'\u0020'`,
-			Expected:  "\u0020",
-		},
-		{
-			Code:     `"\u0020"`,
-			Expected:  "\u0020",
-		},
-		{
-			Code:     `‘\u0020’`,
-			Expected:  "\u0020",
-		},
-		{
-			Code:     `“\u0020”`,
-			Expected:  "\u0020",
-		},
-		{
-			Code:     `«\u0020»`,
-			Expected:  "\u0020",
-		},
-
-
-
-		{
-			Code:     `'\u0030'`,
-			Expected:  "\u0030",
-		},
-		{
-			Code:     `"\u0030"`,
-			Expected:  "\u0030",
-		},
-		{
-			Code:     `‘\u0030’`,
-			Expected:  "\u0030",
-		},
-		{
-			Code:     `“\u0030”`,
-			Expected:  "\u0030",
-		},
-		{
-			Code:     `«\u0030»`,
-			Expected:  "\u0030",
-		},
-
-
-
-		{
-			Code:     `'\u0040'`,
-			Expected:  "\u0040",
-		},
-		{
-			Code:     `"\u0040"`,
-			Expected:  "\u0040",
-		},
-		{
-			Code:     `‘\u0040’`,
-			Expected:  "\u0040",
-		},
-		{
-			Code:     `“\u0040”`,
-			Expected:  "\u0040",
-		},
-		{
-			Code:     `«\u0040»`,
-			Expected:  "\u0040",
-		},
-
-
-
-		{
-			Code:     `'\u0050'`,
-			Expected:  "\u0050",
-		},
-		{
-			Code:     `"\u0050"`,
-			Expected:  "\u0050",
-		},
-		{
-			Code:     `‘\u0050’`,
-			Expected:  "\u0050",
-		},
-		{
-			Code:     `“\u0050”`,
-			Expected:  "\u0050",
-		},
-		{
-			Code:     `«\u0050»`,
-			Expected:  "\u0050",
-		},
-
-
-
-		{
-			Code:     `'\u0060'`,
-			Expected:  "\u0060",
-		},
-		{
-			Code:     `"\u0060"`,
-			Expected:  "\u0060",
-		},
-		{
-			Code:     `‘\u0060’`,
-			Expected:  "\u0060",
-		},
-		{
-			Code:     `“\u0060”`,
-			Expected:  "\u0060",
-		},
-		{
-			Code:     `«\u0060»`,
-			Expected:  "\u0060",
-		},
-
-
-
-		{
-			Code:     `'\u0070'`,
-			Expected:  "\u0070",
-		},
-		{
-			Code:     `"\u0070"`,
-			Expected:  "\u0070",
-		},
-		{
-			Code:     `‘\u0070’`,
-			Expected:  "\u0070",
-		},
-		{
-			Code:     `“\u0070”`,
-			Expected:  "\u0070",
-		},
-		{
-			Code:     `«\u0070»`,
-			Expected:  "\u0070",
-		},
-
-
-
-		{
-			Code:     `'\u0080'`,
-			Expected:  "\u0080",
-		},
-		{
-			Code:     `"\u0080"`,
-			Expected:  "\u0080",
-		},
-		{
-			Code:     `‘\u0080’`,
-			Expected:  "\u0080",
-		},
-		{
-			Code:     `“\u0080”`,
-			Expected:  "\u0080",
-		},
-		{
-			Code:     `«\u0080»`,
-			Expected:  "\u0080",
-		},
-
-
-
-		{
-			Code:     `'\u0090'`,
-			Expected:  "\u0090",
-		},
-		{
-			Code:     `"\u0090"`,
-			Expected:  "\u0090",
-		},
-		{
-			Code:     `‘\u0090’`,
-			Expected:  "\u0090",
-		},
-		{
-			Code:     `“\u0090”`,
-			Expected:  "\u0090",
-		},
-		{
-			Code:     `«\u0090»`,
-			Expected:  "\u0090",
-		},
-
-
-
-		{
-			Code:     `'\u00A0'`,
-			Expected:  "\u00A0",
-		},
-		{
-			Code:     `"\u00A0"`,
-			Expected:  "\u00A0",
-		},
-		{
-			Code:     `‘\u00A0’`,
-			Expected:  "\u00A0",
-		},
-		{
-			Code:     `“\u00A0”`,
-			Expected:  "\u00A0",
-		},
-		{
-			Code:     `«\u00A0»`,
-			Expected:  "\u00A0",
-		},
-
-
-
-		{
-			Code:     `'\u00a0'`,
-			Expected:  "\u00a0",
-		},
-		{
-			Code:     `"\u00a0"`,
-			Expected:  "\u00a0",
-		},
-		{
-			Code:     `‘\u00a0’`,
-			Expected:  "\u00a0",
-		},
-		{
-			Code:     `“\u00a0”`,
-			Expected:  "\u00a0",
-		},
-		{
-			Code:     `«\u00a0»`,
-			Expected:  "\u00a0",
-		},
-
-
-
-		{
-			Code:     `'\u00B0'`,
-			Expected:  "\u00B0",
-		},
-		{
-			Code:     `"\u00B0"`,
-			Expected:  "\u00B0",
-		},
-		{
-			Code:     `‘\u00B0’`,
-			Expected:  "\u00B0",
-		},
-		{
-			Code:     `“\u00B0”`,
-			Expected:  "\u00B0",
-		},
-		{
-			Code:     `«\u00B0»`,
-			Expected:  "\u00B0",
-		},
-
-
-
-		{
-			Code:     `'\u00b0'`,
-			Expected:  "\u00b0",
-		},
-		{
-			Code:     `"\u00b0"`,
-			Expected:  "\u00b0",
-		},
-		{
-			Code:     `‘\u00b0’`,
-			Expected:  "\u00b0",
-		},
-		{
-			Code:     `“\u00b0”`,
-			Expected:  "\u00b0",
-		},
-		{
-			Code:     `«\u00b0»`,
-			Expected:  "\u00b0",
-		},
-
-
-
-		{
-			Code:     `'\u00C0'`,
-			Expected:  "\u00C0",
-		},
-		{
-			Code:     `"\u00C0"`,
-			Expected:  "\u00C0",
-		},
-		{
-			Code:     `‘\u00C0’`,
-			Expected:  "\u00C0",
-		},
-		{
-			Code:     `“\u00C0”`,
-			Expected:  "\u00C0",
-		},
-		{
-			Code:     `«\u00C0»`,
-			Expected:  "\u00C0",
-		},
-
-
-
-		{
-			Code:     `'\u00c0'`,
-			Expected:  "\u00c0",
-		},
-		{
-			Code:     `"\u00c0"`,
-			Expected:  "\u00c0",
-		},
-		{
-			Code:     `‘\u00c0’`,
-			Expected:  "\u00c0",
-		},
-		{
-			Code:     `“\u00c0”`,
-			Expected:  "\u00c0",
-		},
-		{
-			Code:     `«\u00c0»`,
-			Expected:  "\u00c0",
-		},
-
-
-
-		{
-			Code:     `'\u00D0'`,
-			Expected:  "\u00D0",
-		},
-		{
-			Code:     `"\u00D0"`,
-			Expected:  "\u00D0",
-		},
-		{
-			Code:     `‘\u00D0’`,
-			Expected:  "\u00D0",
-		},
-		{
-			Code:     `“\u00D0”`,
-			Expected:  "\u00D0",
-		},
-		{
-			Code:     `«\u00D0»`,
-			Expected:  "\u00D0",
-		},
-
-
-
-		{
-			Code:     `'\u00d0'`,
-			Expected:  "\u00d0",
-		},
-		{
-			Code:     `"\u00d0"`,
-			Expected:  "\u00d0",
-		},
-		{
-			Code:     `‘\u00d0’`,
-			Expected:  "\u00d0",
-		},
-		{
-			Code:     `“\u00d0”`,
-			Expected:  "\u00d0",
-		},
-		{
-			Code:     `«\u00d0»`,
-			Expected:  "\u00d0",
-		},
-
-
-
-		{
-			Code:     `'\u00E0'`,
-			Expected:  "\u00E0",
-		},
-		{
-			Code:     `"\u00E0"`,
-			Expected:  "\u00E0",
-		},
-		{
-			Code:     `‘\u00E0’`,
-			Expected:  "\u00E0",
-		},
-		{
-			Code:     `“\u00E0”`,
-			Expected:  "\u00E0",
-		},
-		{
-			Code:     `«\u00E0»`,
-			Expected:  "\u00E0",
-		},
-
-
-
-		{
-			Code:     `'\u00e0'`,
-			Expected:  "\u00e0",
-		},
-		{
-			Code:     `"\u00e0"`,
-			Expected:  "\u00e0",
-		},
-		{
-			Code:     `‘\u00e0’`,
-			Expected:  "\u00e0",
-		},
-		{
-			Code:     `“\u00e0”`,
-			Expected:  "\u00e0",
-		},
-		{
-			Code:     `«\u00e0»`,
-			Expected:  "\u00e0",
-		},
-
-
-
-		{
-			Code:     `'\u00F0'`,
-			Expected:  "\u00F0",
-		},
-		{
-			Code:     `"\u00F0"`,
-			Expected:  "\u00F0",
-		},
-		{
-			Code:     `‘\u00F0’`,
-			Expected:  "\u00F0",
-		},
-		{
-			Code:     `“\u00F0”`,
-			Expected:  "\u00F0",
-		},
-		{
-			Code:     `«\u00F0»`,
-			Expected:  "\u00F0",
-		},
-
-
-
-		{
-			Code:     `'\u00f0'`,
-			Expected:  "\u00f0",
-		},
-		{
-			Code:     `"\u00f0"`,
-			Expected:  "\u00f0",
-		},
-		{
-			Code:     `‘\u00f0’`,
-			Expected:  "\u00f0",
-		},
-		{
-			Code:     `“\u00f0”`,
-			Expected:  "\u00f0",
-		},
-		{
-			Code:     `«\u00f0»`,
-			Expected:  "\u00f0",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\u0100'`,
-			Expected:  "\u0100",
-		},
-		{
-			Code:     `"\u0100"`,
-			Expected:  "\u0100",
-		},
-		{
-			Code:     `‘\u0100’`,
-			Expected:  "\u0100",
-		},
-		{
-			Code:     `“\u0100”`,
-			Expected:  "\u0100",
-		},
-		{
-			Code:     `«\u0100»`,
-			Expected:  "\u0100",
-		},
-
-
-
-		{
-			Code:     `'\u0200'`,
-			Expected:  "\u0200",
-		},
-		{
-			Code:     `"\u0200"`,
-			Expected:  "\u0200",
-		},
-		{
-			Code:     `‘\u0200’`,
-			Expected:  "\u0200",
-		},
-		{
-			Code:     `“\u0200”`,
-			Expected:  "\u0200",
-		},
-		{
-			Code:     `«\u0200»`,
-			Expected:  "\u0200",
-		},
-
-
-
-		{
-			Code:     `'\u0300'`,
-			Expected:  "\u0300",
-		},
-		{
-			Code:     `"\u0300"`,
-			Expected:  "\u0300",
-		},
-		{
-			Code:     `‘\u0300’`,
-			Expected:  "\u0300",
-		},
-		{
-			Code:     `“\u0300”`,
-			Expected:  "\u0300",
-		},
-		{
-			Code:     `«\u0300»`,
-			Expected:  "\u0300",
-		},
-
-
-
-		{
-			Code:     `'\u0400'`,
-			Expected:  "\u0400",
-		},
-		{
-			Code:     `"\u0400"`,
-			Expected:  "\u0400",
-		},
-		{
-			Code:     `‘\u0400’`,
-			Expected:  "\u0400",
-		},
-		{
-			Code:     `“\u0400”`,
-			Expected:  "\u0400",
-		},
-		{
-			Code:     `«\u0400»`,
-			Expected:  "\u0400",
-		},
-
-
-
-		{
-			Code:     `'\u0500'`,
-			Expected:  "\u0500",
-		},
-		{
-			Code:     `"\u0500"`,
-			Expected:  "\u0500",
-		},
-		{
-			Code:     `‘\u0500’`,
-			Expected:  "\u0500",
-		},
-		{
-			Code:     `“\u0500”`,
-			Expected:  "\u0500",
-		},
-		{
-			Code:     `«\u0500»`,
-			Expected:  "\u0500",
-		},
-
-
-
-		{
-			Code:     `'\u0600'`,
-			Expected:  "\u0600",
-		},
-		{
-			Code:     `"\u0600"`,
-			Expected:  "\u0600",
-		},
-		{
-			Code:     `‘\u0600’`,
-			Expected:  "\u0600",
-		},
-		{
-			Code:     `“\u0600”`,
-			Expected:  "\u0600",
-		},
-		{
-			Code:     `«\u0600»`,
-			Expected:  "\u0600",
-		},
-
-
-
-		{
-			Code:     `'\u0700'`,
-			Expected:  "\u0700",
-		},
-		{
-			Code:     `"\u0700"`,
-			Expected:  "\u0700",
-		},
-		{
-			Code:     `‘\u0700’`,
-			Expected:  "\u0700",
-		},
-		{
-			Code:     `“\u0700”`,
-			Expected:  "\u0700",
-		},
-		{
-			Code:     `«\u0700»`,
-			Expected:  "\u0700",
-		},
-
-
-
-		{
-			Code:     `'\u0800'`,
-			Expected:  "\u0800",
-		},
-		{
-			Code:     `"\u0800"`,
-			Expected:  "\u0800",
-		},
-		{
-			Code:     `‘\u0800’`,
-			Expected:  "\u0800",
-		},
-		{
-			Code:     `“\u0800”`,
-			Expected:  "\u0800",
-		},
-		{
-			Code:     `«\u0800»`,
-			Expected:  "\u0800",
-		},
-
-
-
-		{
-			Code:     `'\u0900'`,
-			Expected:  "\u0900",
-		},
-		{
-			Code:     `"\u0900"`,
-			Expected:  "\u0900",
-		},
-		{
-			Code:     `‘\u0900’`,
-			Expected:  "\u0900",
-		},
-		{
-			Code:     `“\u0900”`,
-			Expected:  "\u0900",
-		},
-		{
-			Code:     `«\u0900»`,
-			Expected:  "\u0900",
-		},
-
-
-
-		{
-			Code:     `'\u0A00'`,
-			Expected:  "\u0A00",
-		},
-		{
-			Code:     `"\u0A00"`,
-			Expected:  "\u0A00",
-		},
-		{
-			Code:     `‘\u0A00’`,
-			Expected:  "\u0A00",
-		},
-		{
-			Code:     `“\u0A00”`,
-			Expected:  "\u0A00",
-		},
-		{
-			Code:     `«\u0A00»`,
-			Expected:  "\u0A00",
-		},
-
-
-
-		{
-			Code:     `'\u0a00'`,
-			Expected:  "\u0a00",
-		},
-		{
-			Code:     `"\u0a00"`,
-			Expected:  "\u0a00",
-		},
-		{
-			Code:     `‘\u0a00’`,
-			Expected:  "\u0a00",
-		},
-		{
-			Code:     `“\u0a00”`,
-			Expected:  "\u0a00",
-		},
-		{
-			Code:     `«\u0a00»`,
-			Expected:  "\u0a00",
-		},
-
-
-
-		{
-			Code:     `'\u0B00'`,
-			Expected:  "\u0B00",
-		},
-		{
-			Code:     `"\u0B00"`,
-			Expected:  "\u0B00",
-		},
-		{
-			Code:     `‘\u0B00’`,
-			Expected:  "\u0B00",
-		},
-		{
-			Code:     `“\u0B00”`,
-			Expected:  "\u0B00",
-		},
-		{
-			Code:     `«\u0B00»`,
-			Expected:  "\u0B00",
-		},
-
-
-
-		{
-			Code:     `'\u0b00'`,
-			Expected:  "\u0b00",
-		},
-		{
-			Code:     `"\u0b00"`,
-			Expected:  "\u0b00",
-		},
-		{
-			Code:     `‘\u0b00’`,
-			Expected:  "\u0b00",
-		},
-		{
-			Code:     `“\u0b00”`,
-			Expected:  "\u0b00",
-		},
-		{
-			Code:     `«\u0b00»`,
-			Expected:  "\u0b00",
-		},
-
-
-
-		{
-			Code:     `'\u0C00'`,
-			Expected:  "\u0C00",
-		},
-		{
-			Code:     `"\u0C00"`,
-			Expected:  "\u0C00",
-		},
-		{
-			Code:     `‘\u0C00’`,
-			Expected:  "\u0C00",
-		},
-		{
-			Code:     `“\u0C00”`,
-			Expected:  "\u0C00",
-		},
-		{
-			Code:     `«\u0C00»`,
-			Expected:  "\u0C00",
-		},
-
-
-
-		{
-			Code:     `'\u0c00'`,
-			Expected:  "\u0c00",
-		},
-		{
-			Code:     `"\u0c00"`,
-			Expected:  "\u0c00",
-		},
-		{
-			Code:     `‘\u0c00’`,
-			Expected:  "\u0c00",
-		},
-		{
-			Code:     `“\u0c00”`,
-			Expected:  "\u0c00",
-		},
-		{
-			Code:     `«\u0c00»`,
-			Expected:  "\u0c00",
-		},
-
-
-
-		{
-			Code:     `'\u0D00'`,
-			Expected:  "\u0D00",
-		},
-		{
-			Code:     `"\u0D00"`,
-			Expected:  "\u0D00",
-		},
-		{
-			Code:     `‘\u0D00’`,
-			Expected:  "\u0D00",
-		},
-		{
-			Code:     `“\u0D00”`,
-			Expected:  "\u0D00",
-		},
-		{
-			Code:     `«\u0D00»`,
-			Expected:  "\u0D00",
-		},
-
-
-
-		{
-			Code:     `'\u0d00'`,
-			Expected:  "\u0d00",
-		},
-		{
-			Code:     `"\u0d00"`,
-			Expected:  "\u0d00",
-		},
-		{
-			Code:     `‘\u0d00’`,
-			Expected:  "\u0d00",
-		},
-		{
-			Code:     `“\u0d00”`,
-			Expected:  "\u0d00",
-		},
-		{
-			Code:     `«\u0d00»`,
-			Expected:  "\u0d00",
-		},
-
-
-
-		{
-			Code:     `'\u0E00'`,
-			Expected:  "\u0E00",
-		},
-		{
-			Code:     `"\u0E00"`,
-			Expected:  "\u0E00",
-		},
-		{
-			Code:     `‘\u0E00’`,
-			Expected:  "\u0E00",
-		},
-		{
-			Code:     `“\u0E00”`,
-			Expected:  "\u0E00",
-		},
-		{
-			Code:     `«\u0E00»`,
-			Expected:  "\u0E00",
-		},
-
-
-
-		{
-			Code:     `'\u0e00'`,
-			Expected:  "\u0e00",
-		},
-		{
-			Code:     `"\u0e00"`,
-			Expected:  "\u0e00",
-		},
-		{
-			Code:     `‘\u0e00’`,
-			Expected:  "\u0e00",
-		},
-		{
-			Code:     `“\u0e00”`,
-			Expected:  "\u0e00",
-		},
-		{
-			Code:     `«\u0e00»`,
-			Expected:  "\u0e00",
-		},
-
-
-
-		{
-			Code:     `'\u0F00'`,
-			Expected:  "\u0F00",
-		},
-		{
-			Code:     `"\u0F00"`,
-			Expected:  "\u0F00",
-		},
-		{
-			Code:     `‘\u0F00’`,
-			Expected:  "\u0F00",
-		},
-		{
-			Code:     `“\u0F00”`,
-			Expected:  "\u0F00",
-		},
-		{
-			Code:     `«\u0F00»`,
-			Expected:  "\u0F00",
-		},
-
-
-
-		{
-			Code:     `'\u0f00'`,
-			Expected:  "\u0f00",
-		},
-		{
-			Code:     `"\u0f00"`,
-			Expected:  "\u0f00",
-		},
-		{
-			Code:     `‘\u0f00’`,
-			Expected:  "\u0f00",
-		},
-		{
-			Code:     `“\u0f00”`,
-			Expected:  "\u0f00",
-		},
-		{
-			Code:     `«\u0f00»`,
-			Expected:  "\u0f00",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\u1000'`,
-			Expected:  "\u1000",
-		},
-		{
-			Code:     `"\u1000"`,
-			Expected:  "\u1000",
-		},
-		{
-			Code:     `‘\u1000’`,
-			Expected:  "\u1000",
-		},
-		{
-			Code:     `“\u1000”`,
-			Expected:  "\u1000",
-		},
-		{
-			Code:     `«\u1000»`,
-			Expected:  "\u1000",
-		},
-
-
-
-		{
-			Code:     `'\u2000'`,
-			Expected:  "\u2000",
-		},
-		{
-			Code:     `"\u2000"`,
-			Expected:  "\u2000",
-		},
-		{
-			Code:     `‘\u2000’`,
-			Expected:  "\u2000",
-		},
-		{
-			Code:     `“\u2000”`,
-			Expected:  "\u2000",
-		},
-		{
-			Code:     `«\u2000»`,
-			Expected:  "\u2000",
-		},
-
-
-
-		{
-			Code:     `'\u3000'`,
-			Expected:  "\u3000",
-		},
-		{
-			Code:     `"\u3000"`,
-			Expected:  "\u3000",
-		},
-		{
-			Code:     `‘\u3000’`,
-			Expected:  "\u3000",
-		},
-		{
-			Code:     `“\u3000”`,
-			Expected:  "\u3000",
-		},
-		{
-			Code:     `«\u3000»`,
-			Expected:  "\u3000",
-		},
-
-
-
-		{
-			Code:     `'\u4000'`,
-			Expected:  "\u4000",
-		},
-		{
-			Code:     `"\u4000"`,
-			Expected:  "\u4000",
-		},
-		{
-			Code:     `‘\u4000’`,
-			Expected:  "\u4000",
-		},
-		{
-			Code:     `“\u4000”`,
-			Expected:  "\u4000",
-		},
-		{
-			Code:     `«\u4000»`,
-			Expected:  "\u4000",
-		},
-
-
-
-		{
-			Code:     `'\u5000'`,
-			Expected:  "\u5000",
-		},
-		{
-			Code:     `"\u5000"`,
-			Expected:  "\u5000",
-		},
-		{
-			Code:     `‘\u5000’`,
-			Expected:  "\u5000",
-		},
-		{
-			Code:     `“\u5000”`,
-			Expected:  "\u5000",
-		},
-		{
-			Code:     `«\u5000»`,
-			Expected:  "\u5000",
-		},
-
-
-
-		{
-			Code:     `'\u6000'`,
-			Expected:  "\u6000",
-		},
-		{
-			Code:     `"\u6000"`,
-			Expected:  "\u6000",
-		},
-		{
-			Code:     `‘\u6000’`,
-			Expected:  "\u6000",
-		},
-		{
-			Code:     `“\u6000”`,
-			Expected:  "\u6000",
-		},
-		{
-			Code:     `«\u6000»`,
-			Expected:  "\u6000",
-		},
-
-
-
-		{
-			Code:     `'\u7000'`,
-			Expected:  "\u7000",
-		},
-		{
-			Code:     `"\u7000"`,
-			Expected:  "\u7000",
-		},
-		{
-			Code:     `‘\u7000’`,
-			Expected:  "\u7000",
-		},
-		{
-			Code:     `“\u7000”`,
-			Expected:  "\u7000",
-		},
-		{
-			Code:     `«\u7000»`,
-			Expected:  "\u7000",
-		},
-
-
-
-		{
-			Code:     `'\u8000'`,
-			Expected:  "\u8000",
-		},
-		{
-			Code:     `"\u8000"`,
-			Expected:  "\u8000",
-		},
-		{
-			Code:     `‘\u8000’`,
-			Expected:  "\u8000",
-		},
-		{
-			Code:     `“\u8000”`,
-			Expected:  "\u8000",
-		},
-		{
-			Code:     `«\u8000»`,
-			Expected:  "\u8000",
-		},
-
-
-
-		{
-			Code:     `'\u9000'`,
-			Expected:  "\u9000",
-		},
-		{
-			Code:     `"\u9000"`,
-			Expected:  "\u9000",
-		},
-		{
-			Code:     `‘\u9000’`,
-			Expected:  "\u9000",
-		},
-		{
-			Code:     `“\u9000”`,
-			Expected:  "\u9000",
-		},
-		{
-			Code:     `«\u9000»`,
-			Expected:  "\u9000",
-		},
-
-
-
-		{
-			Code:     `'\uA000'`,
-			Expected:  "\uA000",
-		},
-		{
-			Code:     `"\uA000"`,
-			Expected:  "\uA000",
-		},
-		{
-			Code:     `‘\uA000’`,
-			Expected:  "\uA000",
-		},
-		{
-			Code:     `“\uA000”`,
-			Expected:  "\uA000",
-		},
-		{
-			Code:     `«\uA000»`,
-			Expected:  "\uA000",
-		},
-
-
-
-		{
-			Code:     `'\ua000'`,
-			Expected:  "\ua000",
-		},
-		{
-			Code:     `"\ua000"`,
-			Expected:  "\ua000",
-		},
-		{
-			Code:     `‘\ua000’`,
-			Expected:  "\ua000",
-		},
-		{
-			Code:     `“\ua000”`,
-			Expected:  "\ua000",
-		},
-		{
-			Code:     `«\ua000»`,
-			Expected:  "\ua000",
-		},
-
-
-
-		{
-			Code:     `'\uB000'`,
-			Expected:  "\uB000",
-		},
-		{
-			Code:     `"\uB000"`,
-			Expected:  "\uB000",
-		},
-		{
-			Code:     `‘\uB000’`,
-			Expected:  "\uB000",
-		},
-		{
-			Code:     `“\uB000”`,
-			Expected:  "\uB000",
-		},
-		{
-			Code:     `«\uB000»`,
-			Expected:  "\uB000",
-		},
-
-
-
-		{
-			Code:     `'\ub000'`,
-			Expected:  "\ub000",
-		},
-		{
-			Code:     `"\ub000"`,
-			Expected:  "\ub000",
-		},
-		{
-			Code:     `‘\ub000’`,
-			Expected:  "\ub000",
-		},
-		{
-			Code:     `“\ub000”`,
-			Expected:  "\ub000",
-		},
-		{
-			Code:     `«\ub000»`,
-			Expected:  "\ub000",
-		},
-
-
-
-		{
-			Code:     `'\uC000'`,
-			Expected:  "\uC000",
-		},
-		{
-			Code:     `"\uC000"`,
-			Expected:  "\uC000",
-		},
-		{
-			Code:     `‘\uC000’`,
-			Expected:  "\uC000",
-		},
-		{
-			Code:     `“\uC000”`,
-			Expected:  "\uC000",
-		},
-		{
-			Code:     `«\uC000»`,
-			Expected:  "\uC000",
-		},
-
-
-
-		{
-			Code:     `'\uc000'`,
-			Expected:  "\uc000",
-		},
-		{
-			Code:     `"\uc000"`,
-			Expected:  "\uc000",
-		},
-		{
-			Code:     `‘\uc000’`,
-			Expected:  "\uc000",
-		},
-		{
-			Code:     `“\uc000”`,
-			Expected:  "\uc000",
-		},
-		{
-			Code:     `«\uc000»`,
-			Expected:  "\uc000",
-		},
-
-
-
-		{
-			Code:     `'\uD000'`,
-			Expected:  "\uD000",
-		},
-		{
-			Code:     `"\uD000"`,
-			Expected:  "\uD000",
-		},
-		{
-			Code:     `‘\uD000’`,
-			Expected:  "\uD000",
-		},
-		{
-			Code:     `“\uD000”`,
-			Expected:  "\uD000",
-		},
-		{
-			Code:     `«\uD000»`,
-			Expected:  "\uD000",
-		},
-
-
-
-		{
-			Code:     `'\ud000'`,
-			Expected:  "\ud000",
-		},
-		{
-			Code:     `"\ud000"`,
-			Expected:  "\ud000",
-		},
-		{
-			Code:     `‘\ud000’`,
-			Expected:  "\ud000",
-		},
-		{
-			Code:     `“\ud000”`,
-			Expected:  "\ud000",
-		},
-		{
-			Code:     `«\ud000»`,
-			Expected:  "\ud000",
-		},
-
-
-
-		{
-			Code:     `'\uE000'`,
-			Expected:  "\uE000",
-		},
-		{
-			Code:     `"\uE000"`,
-			Expected:  "\uE000",
-		},
-		{
-			Code:     `‘\uE000’`,
-			Expected:  "\uE000",
-		},
-		{
-			Code:     `“\uE000”`,
-			Expected:  "\uE000",
-		},
-		{
-			Code:     `«\uE000»`,
-			Expected:  "\uE000",
-		},
-
-
-
-		{
-			Code:     `'\ue000'`,
-			Expected:  "\ue000",
-		},
-		{
-			Code:     `"\ue000"`,
-			Expected:  "\ue000",
-		},
-		{
-			Code:     `‘\ue000’`,
-			Expected:  "\ue000",
-		},
-		{
-			Code:     `“\ue000”`,
-			Expected:  "\ue000",
-		},
-		{
-			Code:     `«\ue000»`,
-			Expected:  "\ue000",
-		},
-
-
-
-		{
-			Code:     `'\uF000'`,
-			Expected:  "\uF000",
-		},
-		{
-			Code:     `"\uF000"`,
-			Expected:  "\uF000",
-		},
-		{
-			Code:     `‘\uF000’`,
-			Expected:  "\uF000",
-		},
-		{
-			Code:     `“\uF000”`,
-			Expected:  "\uF000",
-		},
-		{
-			Code:     `«\uF000»`,
-			Expected:  "\uF000",
-		},
-
-
-
-		{
-			Code:     `'\uf000'`,
-			Expected:  "\uf000",
-		},
-		{
-			Code:     `"\uf000"`,
-			Expected:  "\uf000",
-		},
-		{
-			Code:     `‘\uf000’`,
-			Expected:  "\uf000",
-		},
-		{
-			Code:     `“\uf000”`,
-			Expected:  "\uf000",
-		},
-		{
-			Code:     `«\uf000»`,
-			Expected:  "\uf000",
-		},
-
-
-
-//@TODO: ###############################################
-
-
-
-		{
-			Code:     `'\uf2A7'`,
-			Expected:  "\uf2A7",
-		},
-		{
-			Code:     `"\uf2A7"`,
-			Expected:  "\uf2A7",
-		},
-		{
-			Code:     `‘\uf2A7’`,
-			Expected:  "\uf2A7",
-		},
-		{
-			Code:     `“\uf2A7”`,
-			Expected:  "\uf2A7",
-		},
-		{
-			Code:     `«\uf2A7»`,
-			Expected:  "\uf2A7",
 		},
 
 
@@ -5515,26 +2441,26 @@ func TestCompile(t *testing.T) {
 
 
 
-		{
-			Code:     `'\U01000000'`,
-			Expected:  "\U01000000",
-		},
-		{
-			Code:     `"\U023bCdEf"`,
-			Expected:  "\U023bCdEf",
-		},
-		{
-			Code:     `‘\U023bCdEf’`,
-			Expected:  "\U023bCdEf",
-		},
-		{
-			Code:     `“\U023bCdEf”`,
-			Expected:  "\U023bCdEf",
-		},
-		{
-			Code:     `«\U023bCdDf»`,
-			Expected:  "\U023bCdDf",
-		},
+//		{
+//			Code:     `'\U01000000'`,
+//			Expected:  "\U01000000",
+//		},
+//		{
+//			Code:     `"\U023bCdEf"`,
+//			Expected:  "\U023bCdEf",
+//		},
+//		{
+//			Code:     `‘\U023bCdEf’`,
+//			Expected:  "\U023bCdEf",
+//		},
+//		{
+//			Code:     `“\U023bCdEf”`,
+//			Expected:  "\U023bCdEf",
+//		},
+//		{
+//			Code:     `«\U023bCdDf»`,
+//			Expected:  "\U023bCdDf",
+//		},
 
 
 
@@ -5542,26 +2468,26 @@ func TestCompile(t *testing.T) {
 
 
 
-		{
-			Code:     `'\U109aBcDE'`,
-			Expected:  "\U109aBcDE",
-		},
-		{
-			Code:     `"\U109aBcDE"`,
-			Expected:  "\U109aBcDE",
-		},
-		{
-			Code:     `‘\U109aBcDE’`,
-			Expected:  "\U109aBcDE",
-		},
-		{
-			Code:     `“\U109aBcDE”`,
-			Expected:  "\U109aBcDE",
-		},
-		{
-			Code:     `«\U109aBcDE»`,
-			Expected:  "\U109aBcDE",
-		},
+//		{
+//			Code:     `'\U109aBcDE'`,
+//			Expected:  "\U109aBcDE",
+//		},
+//		{
+//			Code:     `"\U109aBcDE"`,
+//			Expected:  "\U109aBcDE",
+//		},
+//		{
+//			Code:     `‘\U109aBcDE’`,
+//			Expected:  "\U109aBcDE",
+//		},
+//		{
+//			Code:     `“\U109aBcDE”`,
+//			Expected:  "\U109aBcDE",
+//		},
+//		{
+//			Code:     `«\U109aBcDE»`,
+//			Expected:  "\U109aBcDE",
+//		},
 
 
 
@@ -5683,45 +2609,56 @@ func TestCompile(t *testing.T) {
 	}
 
 
+//	tests = append(tests, hexadecialEscapeTests...)
+//	tests = append(tests, lowercaseUEscapeTests...)
+
+
+	testClass = "specific"
 	for testNumber, test := range tests {
+		doTestOnCompile(t, testClass, testNumber, test.Code, test.Expected)
+	}
 
-		actualCompiled, err := Compile( strings.NewReader(test.Code) )
+}
 
-		if nil != err {
-			t.Errorf("For test #%d, did not expected an error, but actually got one: %v", testNumber, err)
-			continue
-		}
 
-		if expected, actual := test.Expected, actualCompiled.String(); expected != actual {
-			t.Errorf("For test #%d, expected %q, but actually got %q.", testNumber, expected, actual)
-			continue
-		}
+func doTestOnCompile(t *testing.T, testClass string, testNumber int, testCode string, testExpected string) {
 
-		if expected, actual := []rune(test.Expected), actualCompiled.Runes(); len(expected) != len(expected) {
-			t.Errorf("For test #%d, expected %d runes, but actually got %d runes.", testNumber, expected, actual)
-			continue
-		} else {
-			for runeNumber, expectedDatum := range expected {
-				actualDatum := actual[runeNumber]
+	actualCompiled, err := Compile( strings.NewReader(testCode) )
 
-				if expectedDatum != actualDatum {
-					t.Errorf("For test #%d an rune #%d, expected rune to be %q, but actually was %q.", testNumber, runeNumber, expectedDatum, actualDatum)
-					continue
-				}
+	if nil != err {
+		t.Errorf("[%s] For test #%d, did not expected an error, but actually got one: %v", testClass, testNumber, err)
+		return
+	}
+
+	if expected, actual := testExpected, actualCompiled.String(); expected != actual {
+		t.Errorf("[%s] For test #%d, expected %q, but actually got %q.", testClass, testNumber, expected, actual)
+		return
+	}
+
+	if expected, actual := []rune(testExpected), actualCompiled.Runes(); len(expected) != len(expected) {
+		t.Errorf("[%s] For test #%d, expected %d runes, but actually got %d runes.", testClass, testNumber, expected, actual)
+		return
+	} else {
+		for runeNumber, expectedDatum := range expected {
+			actualDatum := actual[runeNumber]
+
+			if expectedDatum != actualDatum {
+				t.Errorf("[%s] For test #%d an rune #%d, expected rune to be %q, but actually was %q.", testClass, testNumber, runeNumber, expectedDatum, actualDatum)
+				continue
 			}
 		}
+	}
 
-		if expected, actual := []byte(test.Expected), actualCompiled.Bytes(); len(expected) != len(expected) {
-			t.Errorf("For test #%d, expected %d bytes, but actually got %d bytes.", testNumber, expected, actual)
-			continue
-		} else {
-			for byteNumber, expectedDatum := range expected {
-				actualDatum := actual[byteNumber]
+	if expected, actual := []byte(testExpected), actualCompiled.Bytes(); len(expected) != len(expected) {
+		t.Errorf("[%s] For test #%d, expected %d bytes, but actually got %d bytes.", testClass, testNumber, expected, actual)
+		return
+	} else {
+		for byteNumber, expectedDatum := range expected {
+			actualDatum := actual[byteNumber]
 
-				if expectedDatum != actualDatum {
-					t.Errorf("For test #%d an byte #%d, expected byte to be %d, but actually was %d.", testNumber, byteNumber, expectedDatum, actualDatum)
-					continue
-				}
+			if expectedDatum != actualDatum {
+				t.Errorf("[%s] For test #%d an byte #%d, expected byte to be %d, but actually was %d.", testClass, testNumber, byteNumber, expectedDatum, actualDatum)
+				continue
 			}
 		}
 	}
