@@ -16,7 +16,7 @@ This also supports the following string literal escape sequences:
 * \e (escape)
 * \f (form feed)
 * \n (line feed)
-* \r (carriage return )
+* \r (carriage return)
 * \t (horizontal tab )
 * \v (vertical tab)
 * \\\\ (backslash)
