@@ -2623,19 +2623,21 @@ func TestCompile(t *testing.T) {
 
 func doTestOnCompile(t *testing.T, testClass string, testNumber int, testCode string, testExpected string) {
 
-	actualCompiled, err := Compile( strings.NewReader(testCode) )
+	actualCompiled, actualCode, err := Compile( strings.NewReader(testCode) )
 
 	if nil != err {
 		t.Errorf("[%s] For test #%d, did not expected an error, but actually got one: %v", testClass, testNumber, err)
 		return
 	}
 
+
+
 	if expected, actual := testExpected, actualCompiled.String(); expected != actual {
 		t.Errorf("[%s] For test #%d, expected %q, but actually got %q.", testClass, testNumber, expected, actual)
 		return
 	}
 
-	if expected, actual := []rune(testExpected), actualCompiled.Runes(); len(expected) != len(expected) {
+	if expected, actual := []rune(testExpected), actualCompiled.Runes(); len(expected) != len(actual) {
 		t.Errorf("[%s] For test #%d, expected %d runes, but actually got %d runes.", testClass, testNumber, expected, actual)
 		return
 	} else {
@@ -2649,7 +2651,7 @@ func doTestOnCompile(t *testing.T, testClass string, testNumber int, testCode st
 		}
 	}
 
-	if expected, actual := []byte(testExpected), actualCompiled.Bytes(); len(expected) != len(expected) {
+	if expected, actual := []byte(testExpected), actualCompiled.Bytes(); len(expected) != len(actual) {
 		t.Errorf("[%s] For test #%d, expected %d bytes, but actually got %d bytes.", testClass, testNumber, expected, actual)
 		return
 	} else {
@@ -2658,6 +2660,41 @@ func doTestOnCompile(t *testing.T, testClass string, testNumber int, testCode st
 
 			if expectedDatum != actualDatum {
 				t.Errorf("[%s] For test #%d an byte #%d, expected byte to be %d, but actually was %d.", testClass, testNumber, byteNumber, expectedDatum, actualDatum)
+				continue
+			}
+		}
+	}
+
+
+
+	if expected, actual := testCode, actualCode.String(); expected != actual {
+		t.Errorf("[%s] For test #%d, expected original pre-compiled code %q, but actually got %q.", testClass, testNumber, expected, actual)
+		return
+	}
+
+	if expected, actual := []rune(testCode), actualCode.Runes(); len(expected) != len(actual) {
+		t.Errorf("[%s] For test #%d, expected %d runes in original pre-compiled code, but actually got %d runes.", testClass, testNumber, expected, actual)
+		return
+	} else {
+		for runeNumber, expectedDatum := range expected {
+			actualDatum := actual[runeNumber]
+
+			if expectedDatum != actualDatum {
+				t.Errorf("[%s] For test #%d an rune #%d, expected rune to be %q in original pre-compiled code, but actually was %q.", testClass, testNumber, runeNumber, expectedDatum, actualDatum)
+				continue
+			}
+		}
+	}
+
+	if expected, actual := []byte(testCode), actualCode.Bytes(); len(expected) != len(actual) {
+		t.Errorf("[%s] For test #%d, expected %d bytes in original pre-compiled code, but actually got %d bytes.", testClass, testNumber, expected, actual)
+		return
+	} else {
+		for byteNumber, expectedDatum := range expected {
+			actualDatum := actual[byteNumber]
+
+			if expectedDatum != actualDatum {
+				t.Errorf("[%s] For test #%d an byte #%d, expected byte to be %d in original pre-compiled code, but actually was %d.", testClass, testNumber, byteNumber, expectedDatum, actualDatum)
 				continue
 			}
 		}
@@ -4140,7 +4177,8 @@ func TestCompileSyntaxError(t *testing.T) {
 
 	for testNumber, test := range tests {
 
-		compiled, err := Compile( strings.NewReader(test.Code) )
+		//compiled, code, err := Compile( strings.NewReader(test.Code) )
+		compiled, _, err := Compile( strings.NewReader(test.Code) )
 		if nil == err {
 			t.Errorf("For test #%d, expected an error, but did not actually get one. Code: %q.", testNumber, compiled.String())
 			continue

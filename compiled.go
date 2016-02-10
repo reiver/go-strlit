@@ -11,6 +11,8 @@ import (
 // retrieve the value of the string literal. in []byte, []rune
 // and string formats, respectively.
 type Compiled interface {
+	Compiled()
+
 	Bytes() []byte
 	Runes() []rune
 	String() string
@@ -26,6 +28,11 @@ func newCompiled() *internalCompiled {
 	compiled := internalCompiled{}
 
 	return &compiled
+}
+
+
+func (*internalCompiled) Compiled() {
+	// Nothing here.
 }
 
 

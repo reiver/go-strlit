@@ -53,10 +53,11 @@ Online documentation, which includes examples, can be found at: http://godoc.org
 //stringLiteral := `‹This is a string literal.\tStill going.›`
 //stringLiteral := `«This is a string literal.\tStill going.»`
 
-compiled, err := strlit.Compile( strings.NewReader(stringLiteral) )
+compiled, code, err := strlit.Compile( strings.NewReader(stringLiteral) )
 if nil != err {
 	//@TODO
 }
 
 fmt.Printf("The value of the string literal is: %s\n", compiled.String())
+fmt.Printf("The original pre-compiled string literal is: %s\n", code.String())
 ```
