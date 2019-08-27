@@ -1,11 +1,9 @@
 package strlit
 
-
 import (
 	"fmt"
 	"io"
 )
-
 
 // Compile will "compile" a string literal, which it pulls from the io.RunScanner, into
 // the value the string literal represents.
@@ -13,7 +11,7 @@ import (
 // It returns both the value of the string literal and the original string literal code.
 //
 // If there is a syntax error in the string literal, it will return an error of type
-// strlit.SyntaxErrorComplainer.
+// strlit.SyntaxError.
 //
 // If your string literal is in a Go string, and you want to pass it to strlit.Compile(),
 // then wrap it in a strings.NewReader(). For example:
@@ -31,7 +29,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 	r, _, err = runeScanner.ReadRune()
 	if io.EOF == err {
 		runeScanner.UnreadRune()
-		return nil, nil, newSyntaxErrorComplainer("", "Hit the EOF before getting any data.")
+		return nil, nil, newSyntaxError("", "Hit the EOF before getting any data.")
 	}
 	if nil != err {
 		return nil, nil, err
@@ -55,14 +53,14 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 		endRune = '»'
 	default:
 		runeScanner.UnreadRune()
-		return nil, nil, newSyntaxErrorComplainer(code.String(), "Not a string literal. Beginning rune for string literal is not valid.")
+		return nil, nil, newSyntaxError(code.String(), "Not a string literal. Beginning rune for string literal is not valid.")
 	}
 	code.buffer.WriteRune(r)
 
 
 	// Make sure there are more runes in the string literal code (so that we can next check it ENDS with a quote (')).
 	if _, _, err := runeScanner.ReadRune(); nil != err {
-		return nil, nil, newSyntaxErrorComplainer(code.String(), "Missing ending quote (') at the end of the string literal.")
+		return nil, nil, newSyntaxError(code.String(), "Missing ending quote (') at the end of the string literal.")
 	}
 	runeScanner.UnreadRune()
 
@@ -71,7 +69,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 	for {
 		r, _, err = runeScanner.ReadRune()
 		if io.EOF == err {
-			return nil, nil, newSyntaxErrorComplainer(code.String(), "Hit the EOF before being able to get to end of string literal.")
+			return nil, nil, newSyntaxError(code.String(), "Hit the EOF before being able to get to end of string literal.")
 		}
 		if nil != err {
 			return nil, nil, err
@@ -85,7 +83,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				return compiled, code, nil
 			}
 			if nil != err {
-				return nil, nil, newSyntaxErrorComplainer(code.String(), "Something bad happened.")
+				return nil, nil, newSyntaxError(code.String(), "Something bad happened.")
 			}
 
 			if endRune != r2 {
@@ -98,7 +96,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 
 			r2, _, err := runeScanner.ReadRune()
 			if nil != err {
-				return nil, nil, newSyntaxErrorComplainer(code.String(), "Backslash (\\), by itself, in the middle of a string literal.")
+				return nil, nil, newSyntaxError(code.String(), "Backslash (\\), by itself, in the middle of a string literal.")
 			}
 			code.buffer.WriteRune(r2)
 
@@ -110,28 +108,28 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				r3, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := "Problem after reading universal character escape sequence “\\x”."
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r3)
 
 				r4, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s”.", string(r3))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r4)
 
 				r5, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s”.", string(r3), string(r4))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r5)
 
 				r6, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s%s”.", string(r3), string(r4), string(r5))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r6)
 
@@ -140,28 +138,28 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				r7, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r7)
 
 				r8, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r8)
 
 				r9, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r9)
 
 				r10, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\x%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r10)
 
@@ -169,44 +167,44 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 
 				if !(  ('0' <= r3 && r3 <= '9') || ('A' <= r3 && r3 <= 'F') || ('a' <= r3 && r3 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r4 && r4 <= '9') || ('A' <= r4 && r4 <= 'F') || ('a' <= r4 && r4 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r5 && r5 <= '9') || ('A' <= r5 && r5 <= 'F') || ('a' <= r5 && r5 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r6 && r6 <= '9') || ('A' <= r6 && r6 <= 'F') || ('a' <= r6 && r6 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 
 
 				if !(  ('0' <= r7 && r7 <= '9') || ('A' <= r7 && r7 <= 'F') || ('a' <= r7 && r7 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r8 && r8 <= '9') || ('A' <= r8 && r8 <= 'F') || ('a' <= r8 && r8 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r9 && r9 <= '9') || ('A' <= r9 && r9 <= 'F') || ('a' <= r9 && r9 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r10 && r10 <= '9') || ('A' <= r10 && r10 <= 'F') || ('a' <= r10 && r10 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\U%s%s%s%s%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6), string(r7), string(r8), string(r9), string(r10))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 
@@ -220,7 +218,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r3 && r3 <= 'f' {
 					r += (r3 - 'a' + 10)*16*16*16*16*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r4 && r4 <= '9' {
@@ -230,7 +228,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r4 && r4 <= 'f' {
 					r += (r4 - 'a' + 10)*16*16*16*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r5 && r5 <= '9' {
@@ -240,7 +238,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r5 && r5 <= 'f' {
 					r += (r5 - 'a' + 10)*16*16*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r6 && r6 <= '9' {
@@ -250,7 +248,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r6 && r6 <= 'f' {
 					r += (r6 - 'a' + 10)*16*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 
@@ -262,7 +260,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r7 && r7 <= 'f' {
 					r += (r7 - 'a' + 10)*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r8 && r8 <= '9' {
@@ -272,7 +270,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r8 && r8 <= 'f' {
 					r += (r8 - 'a' + 10)*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r9 && r9 <= '9' {
@@ -282,7 +280,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r9 && r9 <= 'f' {
 					r += (r9 - 'a' + 10)*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r10 && r10 <= '9' {
@@ -292,7 +290,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r10 && r10 <= 'f' {
 					r += (r10 - 'a' + 10)
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 			case 'a':
 				r = '\a'
@@ -312,28 +310,28 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				r3, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := "Problem after reading hexadecimal escape “\\x”."
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r3)
 
 				r4, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\u%s”.", string(r3))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r4)
 
 				r5, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\u%s%s”.", string(r3), string(r4))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r5)
 
 				r6, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading universal character escape sequence “\\u%s%s%s”.", string(r3), string(r4), string(r5))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r6)
 
@@ -341,22 +339,22 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 
 				if !(  ('0' <= r3 && r3 <= '9') || ('A' <= r3 && r3 <= 'F') || ('a' <= r3 && r3 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\u%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r4 && r4 <= '9') || ('A' <= r4 && r4 <= 'F') || ('a' <= r4 && r4 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\u%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r5 && r5 <= '9') || ('A' <= r5 && r5 <= 'F') || ('a' <= r5 && r5 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\u%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r6 && r6 <= '9') || ('A' <= r6 && r6 <= 'F') || ('a' <= r6 && r6 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid universal character escape sequence: “\\u%s%s%s%s”.", string(r3), string(r4), string(r5), string(r6))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 
@@ -370,7 +368,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r3 && r3 <= 'f' {
 					r += (r3 - 'a' + 10)*16*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r4 && r4 <= '9' {
@@ -380,7 +378,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r4 && r4 <= 'f' {
 					r += (r4 - 'a' + 10)*16*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r5 && r5 <= '9' {
@@ -390,7 +388,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r5 && r5 <= 'f' {
 					r += (r5 - 'a' + 10)*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r6 && r6 <= '9' {
@@ -400,7 +398,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r6 && r6 <= 'f' {
 					r += r6 - 'a' + 10
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 			case 'v':
 				r = '\v'
@@ -408,25 +406,25 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				r3, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := "Problem after reading hexadecimal escape “\\x”."
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r3)
 
 				r4, _, err := runeScanner.ReadRune()
 				if nil != err {
 					msg := fmt.Sprintf("Problem after reading hexadecimal escape “\\x%s”.", string(r3))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 				code.buffer.WriteRune(r4)
 
 				if !(  ('0' <= r3 && r3 <= '9') || ('A' <= r3 && r3 <= 'F') || ('a' <= r3 && r3 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid hexadecimal escape sequence: “\\x%s%s”.", string(r3), string(r4))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 				if !(  ('0' <= r4 && r4 <= '9') || ('A' <= r4 && r4 <= 'F') || ('a' <= r4 && r4 <= 'f')  ) {
 					msg := fmt.Sprintf("Invalid hexadecimal escape sequence: “\\x%s%s”.", string(r3), string(r4))
-					return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+					return nil, nil, newSyntaxError(code.String(), msg)
 				}
 
 
@@ -439,7 +437,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r3 && r3 <= 'f' {
 					r += (r3 - 'a' + 10)*16
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 
 				if        '0' <= r4 && r4 <= '9' {
@@ -449,7 +447,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				} else if 'a' <= r4 && r4 <= 'f' {
 					r += r4 - 'a' + 10
 				} else {
-					return nil, nil, newSyntaxErrorComplainer(code.String(), "THIS SHOULD NEVER HAPPEN!")
+					return nil, nil, newSyntaxError(code.String(), "THIS SHOULD NEVER HAPPEN!")
 				}
 			case '\\':
 				r = '\\'
@@ -477,7 +475,7 @@ func Compile(runeScanner io.RuneScanner) (valueOfStringLiteral Parcel, stringLit
 				r = '»'
 			default:
 				msg := fmt.Sprintf("Invalid blackslash escape sequence: \\%s", string(r2))
-				return nil, nil, newSyntaxErrorComplainer(code.String(), msg)
+				return nil, nil, newSyntaxError(code.String(), msg)
 			}
 		}
 

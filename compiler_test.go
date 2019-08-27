@@ -4183,8 +4183,8 @@ func TestCompileSyntaxError(t *testing.T) {
 			t.Errorf("For test #%d, expected an error, but did not actually get one. Code: %q.", testNumber, compiled.String())
 			continue
 		}
-		if complainer, ok := err.(SyntaxErrorComplainer); !ok {
-			t.Errorf("For test #%d, expected an error to be of type SyntaxErrorComplainer, but actually was: %T.", testNumber, err)
+		if complainer, ok := err.(SyntaxError); !ok {
+			t.Errorf("For test #%d, expected an error to be of type SyntaxError, but actually was: %T.", testNumber, err)
 			continue
 		} else if expected, actual := test.ExpectedCode, complainer.Code(); expected != actual {
 			t.Errorf("For test #%d, expected code in error to be %q, but actually was: %q.", testNumber, expected, actual)
