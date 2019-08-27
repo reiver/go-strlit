@@ -39,13 +39,13 @@ type internalSyntaxError struct {
 	message string
 }
 
-func newSyntaxError(code string, message string) SyntaxError {
-	complainer := internalSyntaxError{
+func errSyntaxError(code string, message string) error {
+	var complainer SyntaxError = internalSyntaxError{
 		code:code,
 		message:message,
 	}
 
-	return &complainer
+	return complainer
 }
 
 func (complainer internalSyntaxError) Error() string {
