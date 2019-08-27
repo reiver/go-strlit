@@ -48,16 +48,16 @@ func newSyntaxError(code string, message string) SyntaxError {
 	return &complainer
 }
 
-func (complainer *internalSyntaxError) Error() string {
+func (complainer internalSyntaxError) Error() string {
 	msg := fmt.Sprintf("Syntax Error: %s: %q", complainer.message, complainer.code)
 
 	return msg
 }
 
-func (*internalSyntaxError) SyntaxError() {
+func (internalSyntaxError) SyntaxError() {
 	// Nothing here.
 }
 
-func (complainer *internalSyntaxError) Code() string {
+func (complainer internalSyntaxError) Code() string {
 	return complainer.code
 }
