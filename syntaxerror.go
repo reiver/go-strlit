@@ -49,7 +49,7 @@ func errSyntaxError(code string, message string) error {
 }
 
 func (complainer internalSyntaxError) Error() string {
-	msg := fmt.Sprintf("Syntax Error: %s: %q", complainer.message, complainer.code)
+	msg := fmt.Sprintf("strlit: Syntax Error: %s: %q", complainer.message, complainer.code)
 
 	return msg
 }
