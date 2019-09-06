@@ -1,7 +1,10 @@
 package strlit
 
 import (
+	"github.com/reiver/go-buffers"
+
 	"fmt"
+	"io"
 	"unicode/utf8"
 )
 
@@ -12,7 +15,9 @@ type Paired struct {
 }
 
 // Decode decodes a Paired String Literal.
-func (receiver Paired) Decode(dst []byte, src []byte) (bytesWritten int, bytesRead int, err error) {
+//
+// ‘dst’ can be a []byte, or an io.Writer.
+func (receiver Paired) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
 
 	beginSymbol := receiver.BeginSymbol
 	endSymbol   := receiver.EndSymbol
@@ -23,6 +28,19 @@ func (receiver Paired) Decode(dst []byte, src []byte) (bytesWritten int, bytesRe
 	if nil == dst {
 		return 0, 0, errNilDestination
 	}
+
+	var writer io.Writer
+	{
+		switch casted := dst.(type) {
+		case io.Writer:
+			writer = casted
+		case []byte:
+			writer = buffers.NewWriter(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Destination Type: %T", dst)
+		}
+	}
+
 	if nil == src {
 		return 0, 0, errNilSource
 	}
@@ -54,8 +72,6 @@ func (receiver Paired) Decode(dst []byte, src []byte) (bytesWritten int, bytesRe
 		depth++
 	}
 
-	var pDst []byte = dst
-
 	Loop: for {
 		r, size := utf8.DecodeRune(pSrc)
 		if utf8.RuneError == r && 0 == size {
@@ -79,10 +95,12 @@ func (receiver Paired) Decode(dst []byte, src []byte) (bytesWritten int, bytesRe
 		}
 
 
-		n := copy(pDst, pSrc[:size])
+		n, err := writer.Write(pSrc[:size])
 
 		bytesWritten += size
-		pDst = pDst[size:]
+		if nil != err {
+			return bytesWritten, bytesRead, err
+		}
 
 		bytesRead += size
 		pSrc = pSrc[size:]
