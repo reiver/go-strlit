@@ -13,6 +13,8 @@ import (
 type Bare struct {}
 
 // Decode decodes a Bare String Literal.
+//
+// ‘dst’ can be a []byte, or an io.Writer.
 func (receiver Bare) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
