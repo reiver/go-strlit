@@ -1,9 +1,11 @@
 package strlit
 
 import (
+	"github.com/reiver/go-buffers"
 	"github.com/reiver/go-whitespace"
 
 	"fmt"
+	"io"
 	"unicode/utf8"
 )
 
@@ -11,11 +13,25 @@ import (
 type Bare struct {}
 
 // Decode decodes a Bare String Literal.
-func (receiver Bare) Decode(dst []byte, src []byte) (bytesWritten int, bytesRead int, err error) {
+func (receiver Bare) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
 		return 0, 0, errNilDestination
 	}
+
+	var writer io.Writer
+	{
+		switch casted := dst.(type) {
+		case io.Writer:
+			writer = casted
+		case []byte:
+			writer = buffers.NewWriter(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Destination Type: %T", dst)
+		}
+	}
+
+
 	if nil == src {
 		return 0, 0, errNilSource
 	}
@@ -24,8 +40,6 @@ func (receiver Bare) Decode(dst []byte, src []byte) (bytesWritten int, bytesRead
 	}
 
 	var pSrc []byte = src
-
-	var pDst []byte = dst
 
 	Loop: for {
 		r, size := utf8.DecodeRune(pSrc)
@@ -41,10 +55,11 @@ func (receiver Bare) Decode(dst []byte, src []byte) (bytesWritten int, bytesRead
 			break Loop
 		}
 
-		n := copy(pDst, pSrc[:size])
-
+		n, err := writer.Write(pSrc[:size])
 		bytesWritten += size
-		pDst = pDst[size:]
+		if nil != err {
+			return bytesWritten, bytesRead, err
+		}
 
 		bytesRead += size
 		pSrc = pSrc[size:]
