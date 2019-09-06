@@ -5,6 +5,7 @@ import (
 
 	"github.com/reiver/go-tmpl"
 
+	"bytes"
 	"math/rand"
 	"reflect"
 	"strings"
@@ -625,6 +626,85 @@ func TestPairedDecode(t *testing.T) {
 		var dst []byte = make([]byte, lenSrc)
 
 		byteWritten, bytesRead, err := paired.Decode(dst, src)
+		if nil != err {
+			t.Errorf("For test #%d, did not expect an error, but actually got one.", testNumber)
+			t.Logf("PAIRED: \x1b[93;41m%s...%s\x1b[0m", string(paired.BeginSymbol), string(paired.EndSymbol))
+
+			t.Logf("SRC (string): [%s] {%d}", src, len(src))
+			t.Logf("SRC (string): (%q) {%d}", src, len(src))
+			t.Logf("DST (string): [%s] {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): (%q) {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): [%s] (full) {%d}", dst, len(dst))
+			t.Logf("DST (string): (%q) (full) {%d}", dst, len(dst))
+
+			t.Logf("ERROR TYPE: %T", err)
+			t.Logf("ERROR: %q", err)
+			continue
+		}
+
+
+		if expected, actual := test.ExpectedBytesRead, bytesRead; expected != actual {
+			t.Errorf("For test #%d, actual number of bytes read is not what was expected.", testNumber)
+			t.Logf("PAIRED: \x1b[93;41m%s...%s\x1b[0m", string(paired.BeginSymbol), string(paired.EndSymbol))
+
+			t.Logf("SRC (string): [%s] {%d}", src, len(src))
+			t.Logf("SRC (string): (%q) {%d}", src, len(src))
+			t.Logf("DST (string): [%s] {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): (%q) {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): [%s] (full) {%d}", dst, len(dst))
+			t.Logf("DST (string): (%q) (full) {%d}", dst, len(dst))
+
+
+			t.Logf("EXPECTED: %d", expected)
+			t.Logf("ACTUAL:   %d", actual)
+			continue
+		}
+
+		if expected, actual := test.ExpectedBytesWritten, byteWritten; expected != actual {
+			t.Errorf("For test #%d, actual number of bytes written is not what was expected.", testNumber)
+			t.Logf("PAIRED: \x1b[93;41m%s...%s\x1b[0m", string(paired.BeginSymbol), string(paired.EndSymbol))
+
+			t.Logf("SRC (string): [%s] {%d}", src, len(src))
+			t.Logf("SRC (string): (%q) {%d}", src, len(src))
+			t.Logf("DST (string): [%s] {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): (%q) {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): [%s] (full) {%d}", dst, len(dst))
+			t.Logf("DST (string): (%q) (full) {%d}", dst, len(dst))
+
+			t.Logf("EXPECTED: %d", expected)
+			t.Logf("ACTUAL:   %d", actual)
+			continue
+		}
+
+		if expected, actual := test.Expected, dst[:byteWritten]; !reflect.DeepEqual(expected, actual) {
+			t.Errorf("For test #%d, what was actually written is not what was expected.", testNumber)
+			t.Logf("PAIRED: \x1b[93;41m%s...%s\x1b[0m", string(paired.BeginSymbol), string(paired.EndSymbol))
+
+			t.Logf("SRC (string): [%s] {%d}", src, len(src))
+			t.Logf("SRC (string): (%q) {%d}", src, len(src))
+			t.Logf("DST (string): [%s] {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): (%q) {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): [%s] (full) {%d}", dst, len(dst))
+			t.Logf("DST (string): (%q) (full) {%d}", dst, len(dst))
+
+			t.Logf("EXPECTED: %q", expected)
+			t.Logf("ACTUAL:   %q", actual)
+			continue
+		}
+	}
+
+	for testNumber, test := range tests {
+
+		var paired strlit.Paired
+		paired.BeginSymbol = test.BeginSymbol
+		paired.EndSymbol   = test.EndSymbol
+
+		var src []byte = test.Source
+		lenSrc := len(src)
+
+		var dst []byte = make([]byte, lenSrc)
+
+		byteWritten, bytesRead, err := paired.Decode(dst, bytes.NewReader(src))
 		if nil != err {
 			t.Errorf("For test #%d, did not expect an error, but actually got one.", testNumber)
 			t.Logf("PAIRED: \x1b[93;41m%s...%s\x1b[0m", string(paired.BeginSymbol), string(paired.EndSymbol))

@@ -2,7 +2,10 @@ package strlit
 
 import (
 	"github.com/reiver/go-buffers"
+	"github.com/reiver/go-oi"
+	"github.com/reiver/go-utf8s"
 
+	"bytes"
 	"fmt"
 	"io"
 	"unicode/utf8"
@@ -17,7 +20,9 @@ type Paired struct {
 // Decode decodes a Paired String Literal.
 //
 // ‘dst’ can be a []byte, or an io.Writer.
-func (receiver Paired) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
+//
+// ‘src’ can be a []byte, or an io.ReaderAt, or an io.ReadSeeker.
+func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
 	beginSymbol := receiver.BeginSymbol
 	endSymbol   := receiver.EndSymbol
@@ -44,36 +49,72 @@ func (receiver Paired) Decode(dst interface{}, src []byte) (bytesWritten int, by
 	if nil == src {
 		return 0, 0, errNilSource
 	}
-	if 0 == len(src) {
-		return 0, 0, nil
+
+	var readSeeker io.ReadSeeker
+	{
+		switch casted := src.(type) {
+		case io.ReadSeeker:
+			readSeeker = casted
+		case io.ReaderAt:
+			readSeeker = oi.ReadSeeker(casted)
+		case []byte:
+			readSeeker = bytes.NewReader(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Source Type: %T", src)
+		}
 	}
 
-	var pSrc []byte = src
 	var depth uint
 	{
 		var r rune
 		var size int
+		var err error
 
-		r, size = utf8.DecodeRune(pSrc)
+		r, size, err = utf8s.ReadRune(readSeeker)
+		if nil != err && io.EOF == err {
+			if 0 < size {
+				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			}
+			return bytesWritten, bytesRead, errSyntaxError("", "End Of File (io.EOF) received before getting to end of paired string literal")
+		}
+		if nil != err {
+			if 0 < size {
+				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			}
+			return bytesWritten, bytesRead, err
+		}
 		if utf8.RuneError == r && 0 == size {
+			if 0 < size {
+				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			}
 			return 0, 0, nil
 		}
 		if utf8.RuneError == r {
+			if 0 < size {
+				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			}
 			return 0, 0, errUTF8RuneError
 		}
 
 		if beginSymbol != r {
+			if 0 < size {
+				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			}
 			return 0, 0, errNotLiteral(r)
 		}
-
-		bytesRead += size
-		pSrc = pSrc[size:]
 
 		depth++
 	}
 
 	Loop: for {
-		r, size := utf8.DecodeRune(pSrc)
+		r, size, err := utf8s.ReadRune(readSeeker)
+		bytesRead += size
+		if nil != err && io.EOF == err {
+			break Loop
+		}
+		if nil != err {
+			return bytesWritten, bytesRead, err
+		}
 		if utf8.RuneError == r && 0 == size {
 			return bytesWritten, bytesRead, fmt.Errorf("strlit: source ended before seeing end symbol %q.", endSymbol)
 		}
@@ -88,22 +129,18 @@ func (receiver Paired) Decode(dst interface{}, src []byte) (bytesWritten int, by
 			depth--
 			if 0 == depth {
 				bytesRead += size
-				pSrc = pSrc[size:]
 
 				break Loop
 			}
 		}
 
 
-		n, err := writer.Write(pSrc[:size])
+		n, err := utf8s.WriteRune(writer, r)
 
 		bytesWritten += size
 		if nil != err {
 			return bytesWritten, bytesRead, err
 		}
-
-		bytesRead += size
-		pSrc = pSrc[size:]
 
 		if expected, actual := size, n; expected != actual {
 			return bytesWritten, bytesRead, fmt.Errorf("strlit: Internal Error: wrong number of bytes copied; expected=%d actual=%d", expected, actual)
