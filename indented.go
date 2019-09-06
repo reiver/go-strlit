@@ -1,8 +1,11 @@
 package strlit
 
 import (
+	"github.com/reiver/go-buffers"
+
 	"bytes"
 	"fmt"
+	"io"
 	"unicode/utf8"
 )
 
@@ -10,11 +13,26 @@ import (
 type Indented struct {}
 
 // Decode decodes a Indented String Literal.
-func (receiver Indented) Decode(dst []byte, src []byte) (bytesWritten int, bytesRead int, err error) {
+//
+// ‘dst’ can be a []byte, or an io.Writer.
+func (receiver Indented) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
 		return 0, 0, errNilDestination
 	}
+
+	var writer io.Writer
+	{
+		switch casted := dst.(type) {
+		case io.Writer:
+			writer = casted
+		case []byte:
+			writer = buffers.NewWriter(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Destination Type: %T", dst)
+		}
+	}
+
 	if nil == src {
 		return 0, 0, errNilSource
 	}
@@ -46,8 +64,6 @@ func (receiver Indented) Decode(dst []byte, src []byte) (bytesWritten int, bytes
 	}
 	pSrc = src
 
-	var pDst []byte = dst
-
 	Loop: for {
 		if !bytes.HasPrefix(pSrc, indentation) {
 			break Loop
@@ -68,10 +84,12 @@ func (receiver Indented) Decode(dst []byte, src []byte) (bytesWritten int, bytes
 				return bytesWritten, bytesRead, errUTF8RuneError
 			}
 
-			n := copy(pDst, pSrc[:size])
+			n, err := writer.Write(pSrc[:size])
 
 			bytesWritten += size
-			pDst = pDst[size:]
+			if nil != err {
+				return bytesWritten, bytesRead, err
+			}
 
 			bytesRead += size
 			pSrc = pSrc[size:]
