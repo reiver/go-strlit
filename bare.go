@@ -2,8 +2,11 @@ package strlit
 
 import (
 	"github.com/reiver/go-buffers"
+	"github.com/reiver/go-oi"
+	"github.com/reiver/go-utf8s"
 	"github.com/reiver/go-whitespace"
 
+	"bytes"
 	"fmt"
 	"io"
 	"unicode/utf8"
@@ -15,7 +18,9 @@ type Bare struct {}
 // Decode decodes a Bare String Literal.
 //
 // ‘dst’ can be a []byte, or an io.Writer.
-func (receiver Bare) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
+//
+// ‘src’ can be a []byte, or an io.ReaderAt, or an io.ReadSeeker.
+func (receiver Bare) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
 		return 0, 0, errNilDestination
@@ -33,18 +38,33 @@ func (receiver Bare) Decode(dst interface{}, src []byte) (bytesWritten int, byte
 		}
 	}
 
-
 	if nil == src {
 		return 0, 0, errNilSource
 	}
-	if 0 == len(src) {
-		return 0, 0, nil
+
+	var readSeeker io.ReadSeeker
+	{
+		switch casted := src.(type) {
+		case io.ReadSeeker:
+			readSeeker = casted
+		case io.ReaderAt:
+			readSeeker = oi.ReadSeeker(casted)
+		case []byte:
+			readSeeker = bytes.NewReader(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Source Type: %T", src)
+		}
 	}
 
-	var pSrc []byte = src
-
 	Loop: for {
-		r, size := utf8.DecodeRune(pSrc)
+		r, size, err := utf8s.ReadRune(readSeeker)
+		bytesRead += size
+		if nil != err && io.EOF == err {
+			break Loop
+		}
+		if nil != err {
+			return bytesWritten, bytesRead, err
+		}
 		if utf8.RuneError == r && 0 == size {
 			break Loop
 		}
@@ -54,17 +74,16 @@ func (receiver Bare) Decode(dst interface{}, src []byte) (bytesWritten int, byte
 
 		switch {
 		case whitespace.IsWhitespace(r):
+			readSeeker.Seek(int64(-size), io.SeekCurrent)
+			bytesRead -= size
 			break Loop
 		}
 
-		n, err := writer.Write(pSrc[:size])
+		n, err := utf8s.WriteRune(writer, r)
 		bytesWritten += size
 		if nil != err {
 			return bytesWritten, bytesRead, err
 		}
-
-		bytesRead += size
-		pSrc = pSrc[size:]
 
 		if expected, actual := size, n; expected != actual {
 			return bytesWritten, bytesRead, fmt.Errorf("strlit: Internal Error: wrong number of bytes copied; expected=%d actual=%d", expected, actual)
