@@ -24,12 +24,6 @@ type Paired struct {
 // ‘src’ can be a []byte, or an io.ReaderAt, or an io.ReadSeeker.
 func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
-	beginSymbol := receiver.BeginSymbol
-	endSymbol   := receiver.EndSymbol
-	if beginSymbol == endSymbol {
-		return 0, 0, fmt.Errorf("strlit: a paired literal cannot have the beginning symbol, and the ending symbol be the same: begin-symbol=%q begin-symbol=%q", beginSymbol, endSymbol)
-	}
-
 	if nil == dst {
 		return 0, 0, errNilDestination
 	}
@@ -62,6 +56,25 @@ func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten in
 		default:
 			return 0, 0, fmt.Errorf("strlit: Unsupport Source Type: %T", src)
 		}
+	}
+
+	return receiver.decode(writer, readSeeker)
+}
+
+func (receiver Paired) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWritten int, bytesRead int, err error) {
+
+	if nil == writer {
+		return 0, 0, errNilDestination
+	}
+
+	if nil == readSeeker {
+		return 0, 0, errNilSource
+	}
+
+	beginSymbol := receiver.BeginSymbol
+	endSymbol   := receiver.EndSymbol
+	if beginSymbol == endSymbol {
+		return 0, 0, fmt.Errorf("strlit: a paired literal cannot have the beginning symbol, and the ending symbol be the same: begin-symbol=%q begin-symbol=%q", beginSymbol, endSymbol)
 	}
 
 	var depth uint
