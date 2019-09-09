@@ -2,10 +2,14 @@ package strlit
 
 import (
 	"github.com/reiver/go-buffers"
+	"github.com/reiver/go-indent"
+	"github.com/reiver/go-oi"
+	"github.com/reiver/go-utf8s"
 
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -15,7 +19,9 @@ type Indented struct {}
 // Decode decodes a Indented String Literal.
 //
 // ‘dst’ can be a []byte, or an io.Writer.
-func (receiver Indented) Decode(dst interface{}, src []byte) (bytesWritten int, bytesRead int, err error) {
+//
+// ‘src’ can be a []byte, or an io.ReaderAt, or an io.ReadSeeker.
+func (receiver Indented) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
 		return 0, 0, errNilDestination
@@ -36,47 +42,86 @@ func (receiver Indented) Decode(dst interface{}, src []byte) (bytesWritten int, 
 	if nil == src {
 		return 0, 0, errNilSource
 	}
-	if 0 == len(src) {
-		return 0, 0, nil
+
+	var readSeeker io.ReadSeeker
+	{
+		switch casted := src.(type) {
+		case io.ReadSeeker:
+			readSeeker = casted
+		case io.ReaderAt:
+			readSeeker = oi.ReadSeeker(casted)
+		case []byte:
+			readSeeker = bytes.NewReader(casted)
+		default:
+			return 0, 0, fmt.Errorf("strlit: Unsupport Source Type: %T", src)
+		}
 	}
 
-	var pSrc []byte = src
+	return receiver.decode(writer, readSeeker)
+}
+
+func (receiver Indented) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWritten int, bytesRead int, err error) {
+
+	if nil == writer {
+		return 0, 0, errNilDestination
+	}
+
+	if nil == readSeeker {
+		return 0, 0, errNilSource
+	}
 
 	var indentation []byte
-	IndentationLoop: for {
-		r, size := utf8.DecodeRune(pSrc)
-		if utf8.RuneError == r && 0 == size {
-			break IndentationLoop
-		}
-		if utf8.RuneError == r {
-			return bytesWritten, bytesRead, errUTF8RuneError
+	{
+		var dst strings.Builder
+
+		if err := indent.Detect(&dst, readSeeker); nil != err {
+			return 0, 0, err
 		}
 
-		switch r {
-		case '\t',' ':
-
-		default:
-			break IndentationLoop
-		}
-
-		indentation = append(indentation, string(r)...)
-		pSrc = pSrc[size:]
+		indentation = append([]byte(nil), dst.String()...)
 	}
-	pSrc = src
+
+	var indentationBuffer []byte = make([]byte, len(indentation))
 
 	Loop: for {
-		if !bytes.HasPrefix(pSrc, indentation) {
-			break Loop
-		}
 		{
-			size := len(indentation)
+			n, err := readSeeker.Read(indentationBuffer)
+			if nil != err && io.EOF == err {
+				break Loop
+			}
+			if nil != err {
+				return bytesWritten, bytesRead, err
+			}
+			if expected, actual := len(indentationBuffer), n; expected != actual {
+				if expected < actual {
+					return bytesWritten, bytesRead, fmt.Errorf("strlit: read from io.SeekReader was expected to be %d bytes but was actually %d bytes", expected, actual)
+				}
 
-			bytesRead += size
-			pSrc = pSrc[size:]
+				m, err := readSeeker.Read(indentationBuffer[n:])
+				if nil != err && io.EOF == err {
+					break Loop
+				}
+
+				if expected, actual := len(indentationBuffer), n+m; expected != actual {
+					return bytesWritten, bytesRead, fmt.Errorf("strlit: read from io.SeekReader was expected to be %d bytes but was actually %d bytes", expected, actual)
+				}
+			}
+
+			if expected, actual := indentation, indentationBuffer; !bytes.Equal(expected, actual) {
+				if _, err = readSeeker.Seek(int64(-1 * n), io.SeekCurrent); nil != err {
+					return bytesWritten, bytesRead, err
+				}
+				break Loop
+			}
+			bytesRead += n
 		}
 
 		Inner: for {
-			r, size := utf8.DecodeRune(pSrc)
+			r, size, err := utf8s.ReadRune(readSeeker)
+			bytesRead += size
+			if nil != err {
+				return bytesWritten, bytesRead, err
+			}
 			if utf8.RuneError == r && 0 == size {
 				break Loop
 			}
@@ -84,22 +129,21 @@ func (receiver Indented) Decode(dst interface{}, src []byte) (bytesWritten int, 
 				return bytesWritten, bytesRead, errUTF8RuneError
 			}
 
-			n, err := writer.Write(pSrc[:size])
+			written, err := utf8s.WriteRune(writer, r)
 
-			bytesWritten += size
+			bytesWritten += written
 			if nil != err {
 				return bytesWritten, bytesRead, err
 			}
 
-			bytesRead += size
-			pSrc = pSrc[size:]
-
-			if expected, actual := size, n; expected != actual {
+			if expected, actual := size, written; expected != actual {
 				return bytesWritten, bytesRead, fmt.Errorf("strlit: Internal Error: wrong number of bytes copied; expected=%d actual=%d", expected, actual)
 			}
 
 			switch r {
-			case '\u2028':
+			case '\n',
+			     '\u0085', // Next Line
+			     '\u2028': // Line Separator
 				break Inner
 			}
 		}
