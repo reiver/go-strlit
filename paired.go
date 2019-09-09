@@ -113,7 +113,7 @@ func (receiver Paired) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytes
 			if 0 < size {
 				readSeeker.Seek(int64(-size), io.SeekCurrent)
 			}
-			return 0, 0, errNotLiteral(r)
+			return 0, 0, errNotPairedLiteral(r)
 		}
 
 		depth++
