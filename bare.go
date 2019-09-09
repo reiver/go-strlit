@@ -73,6 +73,9 @@ func (receiver Bare) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWr
 		r, size, err := utf8s.ReadRune(readSeeker)
 		bytesRead += size
 		if nil != err && io.EOF == err {
+			if 0 == bytesRead {
+				return bytesWritten, bytesRead, errEmptySource
+			}
 			break Loop
 		}
 		if nil != err {
@@ -87,8 +90,16 @@ func (receiver Bare) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWr
 
 		switch {
 		case whitespace.IsWhitespace(r):
-			readSeeker.Seek(int64(-size), io.SeekCurrent)
+			_, err := readSeeker.Seek(int64(-size), io.SeekCurrent)
+			if nil != err {
+				return bytesWritten, bytesRead, err
+			}
 			bytesRead -= size
+
+			if 0 == bytesWritten {
+				return bytesWritten, bytesRead, errNotBareLiteral(r)
+			}
+
 			break Loop
 		}
 

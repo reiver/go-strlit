@@ -13,9 +13,9 @@ func TestNotPairedLiteralAsError(t *testing.T) {
 	}
 }
 
-func TestNotPairedLiteralAsNotPairedLiteral(t *testing.T) {
+func TestNotPairedLiteralAsNotLiteral(t *testing.T) {
 
-	var complainer NotPairedLiteral = internalNotPairedLiteral{} // THIS IS WHAT ACTUALLY MATTERS!
+	var complainer NotLiteral = internalNotPairedLiteral{} // THIS IS WHAT ACTUALLY MATTERS!
 
 	if nil == complainer {
 		t.Error("This should never happen.")

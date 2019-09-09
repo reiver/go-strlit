@@ -12,7 +12,170 @@ import (
 	"testing"
 )
 
-func TestBareDecode(t *testing.T) {
+func TestBare_Decode_error(t *testing.T) {
+
+	tests := []struct{
+		Source []byte
+	}{
+		{
+			Source: []byte(""),
+		},
+
+
+
+		{
+			Source: []byte(" "),
+		},
+		{
+			Source: []byte("  "),
+		},
+		{
+			Source: []byte("   "),
+		},
+		{
+			Source: []byte("    "),
+		},
+		{
+			Source: []byte("     "),
+		},
+
+
+
+		{
+			Source: []byte("\t"),
+		},
+		{
+			Source: []byte("\t\t"),
+		},
+		{
+			Source: []byte("\t\t\t"),
+		},
+		{
+			Source: []byte("\t\t\t\t"),
+		},
+		{
+			Source: []byte("\t\t\t\t\t"),
+		},
+
+
+
+		{
+			Source: []byte("\n"),
+		},
+		{
+			Source: []byte("\r"),
+		},
+		{
+			Source: []byte("\u0085"),
+		},
+		{
+			Source: []byte("\u2028"),
+		},
+		{
+			Source: []byte("\u2029"),
+		},
+
+
+
+		{
+			Source: []byte("\r\n"),
+		},
+
+
+
+
+
+
+
+
+
+		{
+			Source: []byte(" Hello world! Khodafez."),
+		},
+		{
+			Source: []byte("  Hello world!  Khodafez."),
+		},
+		{
+			Source: []byte("   Hello world!   Khodafez."),
+		},
+		{
+			Source: []byte("    Hello world!    Khodafez."),
+		},
+		{
+			Source: []byte("     Hello world!     Khodafez."),
+		},
+
+
+
+		{
+			Source: []byte("\tHello world!\tKhodafez."),
+		},
+		{
+			Source: []byte("\t\tHello world!\t\tKhodafez."),
+		},
+		{
+			Source: []byte("\t\t\tHello world!\t\t\tKhodafez."),
+		},
+		{
+			Source: []byte("\t\t\t\tHello world!\t\t\t\tKhodafez."),
+		},
+		{
+			Source: []byte("\t\t\t\t\tHello world!\t\t\t\t\tKhodafez."),
+		},
+
+
+
+		{
+			Source: []byte("\nHello world!\nKhodafez."),
+		},
+		{
+			Source: []byte("\rHello world!\rKhodafez."),
+		},
+		{
+			Source: []byte("\u0085Hello world!\u0085Khodafez."),
+		},
+		{
+			Source: []byte("\u2028Hello world!\u2028Khodafez."),
+		},
+		{
+			Source: []byte("\u2029Hello world!\u2029Khodafez."),
+		},
+
+
+
+		{
+			Source: []byte("\r\nHello world!\r\nKhodafez."),
+		},
+	}
+
+	for testNumber, test := range tests {
+
+		var bare strlit.Bare
+
+		var src []byte = test.Source
+		var dst []byte = make([]byte, len(src))
+
+		byteWritten, bytesRead, err := bare.Decode(dst, src)
+		if nil == err {
+			t.Errorf("For test #%d, \x1b[93;41mexpected an error, but did not actually get one.\x1b[0m", testNumber)
+
+			t.Logf("SRC (string): [%s] {%d}", src[:bytesRead], len(src[:bytesRead]))
+			t.Logf("SRC (string): (%q) {%d}", src[:bytesRead], len(src[:bytesRead]))
+			t.Logf("SRC (string): [%s] {%d} (full)", src, len(src))
+			t.Logf("SRC (string): (%q) {%d} (null)", src, len(src))
+
+			t.Logf("DST (string): [%s] {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): (%q) {%d}", dst[:byteWritten], len(dst[:byteWritten]))
+			t.Logf("DST (string): [%s] (full) {%d}", dst, len(dst))
+			t.Logf("DST (string): (%q) (full) {%d}", dst, len(dst))
+
+			t.Logf("ERROR: %#v", err)
+			continue
+		}
+	}
+}
+
+func TestBare_Decode(t *testing.T) {
 
 	tests := []struct {
 		Source             []byte

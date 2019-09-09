@@ -4,13 +4,8 @@ import (
 	"fmt"
 )
 
-type NotPairedLiteral interface {
-	error
-	NotPairedLiteral() rune
-}
-
 func errNotPairedLiteral(r rune) error {
-	var e NotPairedLiteral = &internalNotPairedLiteral{
+	var e NotLiteral = &internalNotPairedLiteral{
 		r:r,
 	}
 
@@ -25,6 +20,6 @@ func (receiver internalNotPairedLiteral) Error() string {
 	return fmt.Sprintf("strlit: Not Paired Literal: paired literal cannot being with %q (%d)", receiver.r, receiver.r)
 }
 
-func (receiver internalNotPairedLiteral) NotPairedLiteral() rune {
-	return receiver.r
+func (receiver internalNotPairedLiteral) NotLiteral() {
+	// Nothing here.
 }
