@@ -36,7 +36,7 @@ func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten in
 		case []byte:
 			writer = buffers.NewWriter(casted)
 		default:
-			return 0, 0, fmt.Errorf("strlit: Unsupport Destination Type: %T", dst)
+			return 0, 0, fmt.Errorf("strlit: Unsupported Destination Type: %T", dst)
 		}
 	}
 
@@ -54,7 +54,7 @@ func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten in
 		case []byte:
 			readSeeker = bytes.NewReader(casted)
 		default:
-			return 0, 0, fmt.Errorf("strlit: Unsupport Source Type: %T", src)
+			return 0, 0, fmt.Errorf("strlit: Unsupported Source Type: %T", src)
 		}
 	}
 
