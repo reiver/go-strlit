@@ -56,6 +56,19 @@ func (receiver Bare) Decode(dst interface{}, src interface{}) (bytesWritten int,
 		}
 	}
 
+	return receiver.decode(writer, readSeeker)
+}
+
+func (receiver Bare) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWritten int, bytesRead int, err error) {
+
+	if nil == writer {
+		return 0, 0, errNilDestination
+	}
+
+	if nil == readSeeker {
+		return 0, 0, errNilSource
+	}
+
 	Loop: for {
 		r, size, err := utf8s.ReadRune(readSeeker)
 		bytesRead += size
