@@ -42,35 +42,37 @@ func (receiver Bare) Decode(dst interface{}, src interface{}) (bytesWritten int,
 		return 0, 0, errNilSource
 	}
 
-	var readSeeker io.ReadSeeker
+	var runeScanner io.RuneScanner
 	{
 		switch casted := src.(type) {
+		case io.RuneScanner:
+			runeScanner = casted
 		case io.ReadSeeker:
-			readSeeker = casted
+			runeScanner = utf8s.NewRuneScanner(casted)
 		case io.ReaderAt:
-			readSeeker = oi.ReadSeeker(casted)
+			runeScanner = utf8s.NewRuneScanner(oi.ReadSeeker(casted))
 		case []byte:
-			readSeeker = bytes.NewReader(casted)
+			runeScanner = bytes.NewReader(casted)
 		default:
 			return 0, 0, fmt.Errorf("strlit: Unsupported Source Type: %T", src)
 		}
 	}
 
-	return receiver.decode(writer, readSeeker)
+	return receiver.decode(writer, runeScanner)
 }
 
-func (receiver Bare) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWritten int, bytesRead int, err error) {
+func (receiver Bare) decode(writer io.Writer, runeScanner io.RuneScanner) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == writer {
 		return 0, 0, errNilDestination
 	}
 
-	if nil == readSeeker {
+	if nil == runeScanner {
 		return 0, 0, errNilSource
 	}
 
 	Loop: for {
-		r, size, err := utf8s.ReadRune(readSeeker)
+		r, size, err := runeScanner.ReadRune()
 		bytesRead += size
 		if nil != err && io.EOF == err {
 			if 0 == bytesRead {
@@ -90,7 +92,7 @@ func (receiver Bare) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWr
 
 		switch {
 		case whitespace.IsWhitespace(r):
-			_, err := readSeeker.Seek(int64(-size), io.SeekCurrent)
+			err := runeScanner.UnreadRune()
 			if nil != err {
 				return bytesWritten, bytesRead, err
 			}

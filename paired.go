@@ -44,30 +44,32 @@ func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten in
 		return 0, 0, errNilSource
 	}
 
-	var readSeeker io.ReadSeeker
+	var runeScanner io.RuneScanner
 	{
 		switch casted := src.(type) {
+		case io.RuneScanner:
+			runeScanner = casted
 		case io.ReadSeeker:
-			readSeeker = casted
+			runeScanner = utf8s.NewRuneScanner(casted)
 		case io.ReaderAt:
-			readSeeker = oi.ReadSeeker(casted)
+			runeScanner = utf8s.NewRuneScanner(oi.ReadSeeker(casted))
 		case []byte:
-			readSeeker = bytes.NewReader(casted)
+			runeScanner = bytes.NewReader(casted)
 		default:
 			return 0, 0, fmt.Errorf("strlit: Unsupported Source Type: %T", src)
 		}
 	}
 
-	return receiver.decode(writer, readSeeker)
+	return receiver.decode(writer, runeScanner)
 }
 
-func (receiver Paired) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytesWritten int, bytesRead int, err error) {
+func (receiver Paired) decode(writer io.Writer, runeScanner io.RuneScanner) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == writer {
 		return 0, 0, errNilDestination
 	}
 
-	if nil == readSeeker {
+	if nil == runeScanner {
 		return 0, 0, errNilSource
 	}
 
@@ -83,35 +85,37 @@ func (receiver Paired) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytes
 		var size int
 		var err error
 
-		r, size, err = utf8s.ReadRune(readSeeker)
+		r, size, err = runeScanner.ReadRune()
 		if nil != err && io.EOF == err {
 			if 0 < size {
-				readSeeker.Seek(int64(-size), io.SeekCurrent)
+				if err := runeScanner.UnreadRune(); nil != err {
+					return bytesWritten, bytesRead, err
+				}
 			}
 			return bytesWritten, bytesRead, errSyntaxError("", "End Of File (io.EOF) received before getting to end of paired string literal")
 		}
 		if nil != err {
-			if 0 < size {
-				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			if err := runeScanner.UnreadRune(); nil != err {
+				return bytesWritten, bytesRead, err
 			}
 			return bytesWritten, bytesRead, err
 		}
 		if utf8.RuneError == r && 0 == size {
-			if 0 < size {
-				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			if err := runeScanner.UnreadRune(); nil != err {
+				return bytesWritten, bytesRead, err
 			}
 			return 0, 0, nil
 		}
 		if utf8.RuneError == r {
-			if 0 < size {
-				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			if err := runeScanner.UnreadRune(); nil != err {
+				return bytesWritten, bytesRead, err
 			}
 			return 0, 0, errUTF8RuneError
 		}
 
 		if beginSymbol != r {
-			if 0 < size {
-				readSeeker.Seek(int64(-size), io.SeekCurrent)
+			if err := runeScanner.UnreadRune(); nil != err {
+				return bytesWritten, bytesRead, err
 			}
 			return 0, 0, errNotPairedLiteral(r)
 		}
@@ -120,7 +124,7 @@ func (receiver Paired) decode(writer io.Writer, readSeeker io.ReadSeeker) (bytes
 	}
 
 	Loop: for {
-		r, size, err := utf8s.ReadRune(readSeeker)
+		r, size, err := runeScanner.ReadRune()
 		bytesRead += size
 		if nil != err && io.EOF == err {
 			break Loop
