@@ -20,7 +20,7 @@ type Indented struct {}
 //
 // ‘dst’ can be a []byte, or an io.Writer.
 //
-// ‘src’ can be a []byte, or an io.ReaderAt, or an io.ReadSeeker.
+// ‘src’ can be a rune, or a string, or a []byte, or an io.ReaderAt, or an io.ReadSeeker.
 func (receiver Indented) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
@@ -52,6 +52,10 @@ func (receiver Indented) Decode(dst interface{}, src interface{}) (bytesWritten 
 			readSeeker = oi.ReadSeeker(casted)
 		case []byte:
 			readSeeker = bytes.NewReader(casted)
+		case string:
+			readSeeker = strings.NewReader(casted)
+		case rune:
+			readSeeker = strings.NewReader(string(casted))
 		default:
 			return 0, 0, fmt.Errorf("strlit: Unsupported Source Type: %T", src)
 		}
