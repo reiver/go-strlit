@@ -22,7 +22,7 @@ type Paired struct {
 //
 // ‘dst’ can be a []byte, or an io.Writer.
 //
-// ‘src’ can be a string, or a []byte, or an io.ReaderAt, or an io.ReadSeeker, or an io.RuneScanner.
+// ‘src’ can be a rune, or a string, or a []byte, or an io.ReaderAt, or an io.ReadSeeker, or an io.RuneScanner.
 func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten int, bytesRead int, err error) {
 
 	if nil == dst {
@@ -58,6 +58,8 @@ func (receiver Paired) Decode(dst interface{}, src interface{}) (bytesWritten in
 			runeScanner = bytes.NewReader(casted)
 		case string:
 			runeScanner = strings.NewReader(casted)
+		case rune:
+			runeScanner = strings.NewReader(string(casted))
 		default:
 			return 0, 0, fmt.Errorf("strlit: Unsupported Source Type: %T", src)
 		}
