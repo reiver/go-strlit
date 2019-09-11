@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"string"
+	"strings"
 	"unicode/utf8"
 )
 
